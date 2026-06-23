@@ -270,6 +270,27 @@
       if (!Number.isFinite(num) || num <= 0) return 'N/A';
       return `${num} month${num === 1 ? '' : 's'}`;
     }
+    function displayText(value) {
+      if (value === null || value === undefined || value === '') return '';
+      return String(value);
+    }
+
+    function formatEnrollmentDate(value) {
+      if (!value) return '';
+      const raw = String(value).slice(0, 10);
+      const parts = raw.split('-');
+      if (parts.length !== 3) return '';
+      const [year, month, day] = parts;
+      if (!year || !month || !day) return '';
+      return `${month}/${day}/${year}`;
+    }
+
+    function formatEnrollmentMonths(value) {
+      if (value === null || value === undefined || value === '') return '';
+      const num = Number(value);
+      if (!Number.isFinite(num) || num <= 0) return '';
+      return `${num} month${num === 1 ? '' : 's'}`;
+    }
     function populateProfile(c) {
       const nameParts = c.name.split(' ');
       const lastName = nameParts.pop();
@@ -280,18 +301,30 @@
       statusEl.textContent = c.status;
       statusEl.className = `status-badge ${c.status === 'Active' ? 'status-active' : 'status-inactive'}`;
 
-      document.getElementById('val-age').textContent = c.age || 'â€”';
-      document.getElementById('val-country').textContent = c.country || 'â€”';
-      document.getElementById('val-status').textContent = c.status || 'â€”';
+      document.getElementById('val-age').textContent = displayText(c.age);
+      document.getElementById('val-country').textContent = displayText(c.country);
+
+      const enrollmentDateValue = document.getElementById('val-enrollment-date');
+      if (enrollmentDateValue) enrollmentDateValue.textContent = formatEnrollmentDate(c.enrollment_date);
+
+      const enrollmentMonthsValue = document.getElementById('val-enrollment-months');
+      if (enrollmentMonthsValue) enrollmentMonthsValue.textContent = formatEnrollmentMonths(c.enrollment_months);
+
+      document.getElementById('val-status').textContent = displayText(c.status);
       document.getElementById('val-athlete').textContent = c.is_athlete ? 'Yes' : 'No';
-      document.getElementById('val-background').textContent = c.background || 'â€”';
-      document.getElementById('val-conditions').textContent = c.physical_conditions || 'â€”';
-      document.getElementById('val-comments').textContent = c.other_comments || 'â€”';
+      document.getElementById('val-background').textContent = displayText(c.background);
+      document.getElementById('val-conditions').textContent = displayText(c.physical_conditions);
+      document.getElementById('val-comments').textContent = displayText(c.other_comments);
 
       document.getElementById('inp-age').value = c.age || '';
       document.getElementById('inp-country').value = c.country || '';
-      document.getElementById('inp-enrollment-date').value = c.enrollment_date || '';
-      document.getElementById('inp-enrollment-months').value = c.enrollment_months ?? '';
+
+      const enrollmentDateInput = document.getElementById('inp-enrollment-date');
+      if (enrollmentDateInput) enrollmentDateInput.value = c.enrollment_date ? String(c.enrollment_date).slice(0, 10) : '';
+
+      const enrollmentMonthsInput = document.getElementById('inp-enrollment-months');
+      if (enrollmentMonthsInput) enrollmentMonthsInput.value = c.enrollment_months ?? '';
+
       document.getElementById('inp-status').value = c.status || 'Active';
       document.getElementById('inp-background').value = c.background || '';
       document.getElementById('inp-conditions').value = c.physical_conditions || '';
@@ -325,11 +358,13 @@
       btn.disabled = true;
       btn.textContent = 'SAVING...';
 
+      const enrollmentMonthsRaw = document.getElementById('inp-enrollment-months')?.value.trim() || '';
+
       const updates = {
         age: document.getElementById('inp-age').value.trim(),
         country: document.getElementById('inp-country').value.trim(),
-        enrollment_date: document.getElementById('inp-enrollment-date').value || null,
-        enrollment_months: document.getElementById('inp-enrollment-months').value ? Number(document.getElementById('inp-enrollment-months').value) : null,
+        enrollment_date: document.getElementById('inp-enrollment-date')?.value || null,
+        enrollment_months: enrollmentMonthsRaw ? Number(enrollmentMonthsRaw) : null,
         status: document.getElementById('inp-status').value,
         is_athlete: document.getElementById('athleteToggle').checked,
         background: document.getElementById('inp-background').value.trim(),
@@ -340,7 +375,8 @@
       const ok = await dbUpdate('clients', clientId, updates);
 
       if (ok) {
-        clientData = { ...clientData, ...updates };
+        const fresh = await dbGet('clients', `id=eq.`);
+        clientData = fresh || { ...clientData, ...updates };
         populateProfile(clientData);
         showToast('Profile saved!', 'success');
         toggleEdit(false);
@@ -383,4 +419,5 @@
   <script src="chat-widget.js"></script>
 </body>
 </html>
+
 
