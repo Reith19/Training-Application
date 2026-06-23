@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -218,10 +218,10 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td><span class="workout-name">${w.name}</span></td>
-          <td><span class="category-badge">${w.category || '—'}</span></td>
-          <td style="max-width:300px;color:#777;font-size:0.82rem;">${w.description || '—'}</td>
+          <td><span class="category-badge">${w.category || 'â€”'}</span></td>
+          <td style="max-width:300px;color:#777;font-size:0.82rem;">${w.description || 'â€”'}</td>
           <td>${w.youtube_url
-            ? `<a href="${w.youtube_url}" target="_blank" class="watch-link">▶ WATCH</a>`
+            ? `<a href="${w.youtube_url}" target="_blank" class="watch-link">â–¶ WATCH</a>`
             : '<span style="color:#444;">No link</span>'
           }</td>
           <td><button class="btn-delete" onclick="deleteWorkout('${w.id}')">DELETE</button></td>
@@ -299,5 +299,6 @@
     loadWorkouts();
   </script>
 
+  <script src="chat-widget.js"></script>
 </body>
 </html>

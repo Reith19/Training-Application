@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -14,7 +14,7 @@
 <body>
 <div class="topbar"><a href="home.html" class="logo-area"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a><button class="logout" onclick="rsAuth.signOut()">LOGOUT</button></div>
 <div class="page">
-  <a href="program-builder.html" class="back" onclick="event.preventDefault(); history.back();">← Back to Program Builder</a>
+  <a href="program-builder.html" class="back" onclick="event.preventDefault(); history.back();">â† Back to Program Builder</a>
   <div class="header">
     <div><h1 class="brand-title">IMPORT <span>BLOCK</span></h1><div class="subtitle">Upload one Excel sheet/block at a time. Same block name replaces the existing block; new block name appends.</div></div>
     <div class="actions"><span id="importStatus" class="import-status"></span><button id="importBtn" class="btn-red" onclick="doImport()" disabled>IMPORT BLOCK</button><button class="btn" onclick="clearFile()">CLEAR FILE</button></div>
@@ -33,7 +33,7 @@
       <div class="panel-body">
         <div id="replaceWarning" class="warning" style="display:none"></div>
         <div id="previewPanel" class="preview">
-          <div class="preview-head"><div><div class="preview-title" id="previewTitle">Block</div><div class="preview-summary" id="previewSummary">—</div></div><button class="btn-red" onclick="doImport()">IMPORT THIS BLOCK</button></div>
+          <div class="preview-head"><div><div class="preview-title" id="previewTitle">Block</div><div class="preview-summary" id="previewSummary">â€”</div></div><button class="btn-red" onclick="doImport()">IMPORT THIS BLOCK</button></div>
           <div id="previewWeeks"></div>
         </div>
         <div id="noPreview" class="empty">Select a client and upload an Excel file to preview the parsed block.</div>
@@ -81,7 +81,7 @@ async function loadClients(){
   const sel=document.getElementById('clientSelect');
   sel.innerHTML='<option value="">Loading clients...</option>';
   clients=await rsAuth.dbSelect('clients','select=id,name,program_data&order=name.asc');
-  sel.innerHTML='<option value="">— Select a client —</option>'+clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+  sel.innerHTML='<option value="">â€” Select a client â€”</option>'+clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
 }
 
 async function loadWorkoutRepo(){
@@ -101,7 +101,7 @@ function onClientChange(){
     document.getElementById('existingBlocks').innerHTML=prog.blocks.map(b=>{
       const weeks=b.weeks?.length||0;
       const days=(b.weeks||[]).reduce((n,w)=>n+(w.days?.length||0),0);
-      return `<div class="block-row"><div class="block-name">${esc(b.name)} <span class="badge badge-blue">${weeks}w · ${days}d</span></div></div>`;
+      return `<div class="block-row"><div class="block-name">${esc(b.name)} <span class="badge badge-blue">${weeks}w Â· ${days}d</span></div></div>`;
     }).join('');
   }
   updateImportBtn();
@@ -131,7 +131,7 @@ function isExercise(v){
   if(!s||s.length<2)return false;
   if(isDayHeader(s))return false;
   if(/^week\s*\d+/i.test(s))return false;
-  if(/^[-–—]+$/.test(s))return false;
+  if(/^[-â€“â€”]+$/.test(s))return false;
   if(isHeaderText(s))return false;
   return true;
 }
@@ -144,7 +144,7 @@ function parseExerciseName(raw){
 function splitSetsReps(v){
   const s=cleanVal(v);
   if(!s)return{sets:'',reps:''};
-  const m=s.match(/^(\d+)\s*[x×]\s*(.+)$/i);
+  const m=s.match(/^(\d+)\s*[xÃ—]\s*(.+)$/i);
   if(m)return{sets:m[1].trim(),reps:m[2].trim()};
   return{sets:s,reps:''};
 }
@@ -390,7 +390,7 @@ function handleFile(file){
       console.error(err);
       showError(err.message);
       document.getElementById('dropzone').classList.add('error-file');
-      document.getElementById('dropzoneTitle').textContent='Error — try again';
+      document.getElementById('dropzoneTitle').textContent='Error â€” try again';
       parsedBlock=null;
       document.getElementById('previewPanel').classList.remove('show');
       updateImportBtn();
@@ -401,7 +401,7 @@ function handleFile(file){
 
 function showError(msg){
   const el=document.getElementById('fileError');
-  el.innerHTML=`<strong>⚠ Error:</strong> ${esc(msg)}`;
+  el.innerHTML=`<strong>âš  Error:</strong> ${esc(msg)}`;
   el.style.display='block';
 }
 function clearError(){document.getElementById('fileError').style.display='none'}
@@ -430,15 +430,15 @@ function renderPreview(){
   const newExercises=allExNames.filter(n=>n&&!repoNames.has(String(n).toLowerCase()));
 
   document.getElementById('previewTitle').textContent=b.name;
-  document.getElementById('previewSummary').textContent=`${b.weeks.length} weeks · ${totalDays} days · ${totalExercises} exercises · ${totalSetRows} set rows`;
+  document.getElementById('previewSummary').textContent=`${b.weeks.length} weeks Â· ${totalDays} days Â· ${totalExercises} exercises Â· ${totalSetRows} set rows`;
   document.getElementById('previewWeeks').innerHTML=b.weeks.map(w=>{
     const dCount=w.days.length;
     const eCount=w.days.reduce((n,d)=>n+d.exercises.length,0);
     const rCount=w.days.reduce((n,d)=>n+d.exercises.reduce((x,e)=>x+(e.lines?.length||1),0),0);
-    const obj=w.objective?`<span style="color:#888;font-size:.76rem;font-weight:400"> — ${esc(w.objective)}</span>`:'';
-    return`<div class="block-row"><div class="block-name">${esc(w.name)}${obj}</div><div class="block-meta"><span><span class="badge badge-blue">${dCount} day${dCount!==1?'s':''}</span></span><span><span class="badge badge-green">${eCount} exercises · ${rCount} rows</span></span></div></div>`;
+    const obj=w.objective?`<span style="color:#888;font-size:.76rem;font-weight:400"> â€” ${esc(w.objective)}</span>`:'';
+    return`<div class="block-row"><div class="block-name">${esc(w.name)}${obj}</div><div class="block-meta"><span><span class="badge badge-blue">${dCount} day${dCount!==1?'s':''}</span></span><span><span class="badge badge-green">${eCount} exercises Â· ${rCount} rows</span></span></div></div>`;
   }).join('')+
-  (newExercises.length?`<div class="warning" style="margin-top:12px"><strong>⚠ ${newExercises.length} new exercise${newExercises.length!==1?'s':''} will be created in Workout Repository</strong> as Uncategorized:<br><span style="color:#fff;opacity:.75">${newExercises.map(n=>esc(n)).join(' · ')}</span></div>`:'')+
+  (newExercises.length?`<div class="warning" style="margin-top:12px"><strong>âš  ${newExercises.length} new exercise${newExercises.length!==1?'s':''} will be created in Workout Repository</strong> as Uncategorized:<br><span style="color:#fff;opacity:.75">${newExercises.map(n=>esc(n)).join(' Â· ')}</span></div>`:'')+
   (topSets?`<div style="margin-top:12px;font-size:.8rem;color:#888"><span class="badge badge-yellow" style="margin-right:6px">${topSets} top set exercise${topSets!==1?'s':''}</span>will receive "Send a video of last set" as coach comment.</div>`:'');
 
   refreshReplaceWarning();
@@ -451,7 +451,7 @@ function refreshReplaceWarning(){
   if(!parsedBlock||!existingProgram){warn.style.display='none';return}
   const match=existingProgram.blocks.find(b=>String(b.name).trim().toLowerCase()===String(parsedBlock.name).trim().toLowerCase());
   if(match){
-    warn.innerHTML=`<strong>⚠ "${esc(parsedBlock.name)}" already exists in this client's program.</strong> Importing will replace that block and all its logged data.`;
+    warn.innerHTML=`<strong>âš  "${esc(parsedBlock.name)}" already exists in this client's program.</strong> Importing will replace that block and all its logged data.`;
     warn.style.display='block';
   }else warn.style.display='none';
 }
@@ -472,9 +472,9 @@ async function doImport(){
     log.scrollTop=log.scrollHeight;
   }
   try{
-    lg('▶ Starting import...','head');
+    lg('â–¶ Starting import...','head');
     lg(`  Block: ${parsedBlock.name}`);
-    lg('▶ Syncing exercises to Workout Repository...','head');
+    lg('â–¶ Syncing exercises to Workout Repository...','head');
     workoutRepo=await rsAuth.dbSelect('workouts','select=id,name,category&order=name.asc');
     const repoMap=new Map(workoutRepo.map(w=>[String(w.name||'').toLowerCase(),w]));
     const allExNames=[...new Set(parsedBlock.weeks.flatMap(w=>w.days.flatMap(d=>d.exercises.map(e=>e.exercise_name))))].filter(Boolean);
@@ -483,7 +483,7 @@ async function doImport(){
       const key=String(name).toLowerCase();
       if(repoMap.has(key)){
         nameToId.set(name,repoMap.get(key).id);
-        lg(`  ✓ Found: ${name}`,'ok');
+        lg(`  âœ“ Found: ${name}`,'ok');
       }else{
         const nw=await rsAuth.dbInsert('workouts',{name,category:'Uncategorized',description:'',youtube_url:''});
         nameToId.set(name,nw.id);
@@ -491,7 +491,7 @@ async function doImport(){
         lg(`  + Created: ${name}`,'info');
       }
     }
-    lg('▶ Linking exercises...','head');
+    lg('â–¶ Linking exercises...','head');
     for(const w of parsedBlock.weeks){
       for(const d of w.days){
         for(const e of d.exercises){
@@ -500,28 +500,28 @@ async function doImport(){
         }
       }
     }
-    lg('▶ Merging block into client program...','head');
+    lg('â–¶ Merging block into client program...','head');
     const fresh=await rsAuth.dbGet('clients',`id=eq.${encodeURIComponent(clientId)}`);
     const prog=fresh?.program_data||{blocks:[]};
     if(!Array.isArray(prog.blocks))prog.blocks=[];
     const idx=prog.blocks.findIndex(b=>String(b.name).trim().toLowerCase()===String(parsedBlock.name).trim().toLowerCase());
     if(idx>=0){prog.blocks[idx]=parsedBlock;lg(`  Replaced: ${parsedBlock.name}`,'info')}
     else{prog.blocks.push(parsedBlock);lg(`  Appended: ${parsedBlock.name}`,'info')}
-    lg('▶ Saving...','head');
+    lg('â–¶ Saving...','head');
     await rsAuth.dbPatch('clients',`id=eq.${encodeURIComponent(clientId)}`,{program_data:prog});
     const c=clients.find(x=>x.id===clientId);
     if(c)c.program_data=prog;
     existingProgram=prog;
     onClientChange();
-    lg('✓ Import complete!','ok');
-    status.textContent='✓ Import complete';
+    lg('âœ“ Import complete!','ok');
+    status.textContent='âœ“ Import complete';
     status.className='import-status';
     status.style.display='inline';
     toast('Block imported successfully!','success');
   }catch(e){
     console.error(e);
-    lg('✗ Error: '+(e.message||JSON.stringify(e)),'err');
-    status.textContent='✗ Import failed';
+    lg('âœ— Error: '+(e.message||JSON.stringify(e)),'err');
+    status.textContent='âœ— Import failed';
     status.className='import-status err';
     status.style.display='inline';
     toast('Import failed: '+e.message,'error');
@@ -562,5 +562,7 @@ init();
   }
 })();
 </script>
+  <script src="chat-widget.js"></script>
 </body>
 </html>
+

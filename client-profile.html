@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -118,17 +118,17 @@
       <div class="field-row">
         <div class="field-group">
           <div class="field-label">Age</div>
-          <div class="field-value" id="val-age">—</div>
+          <div class="field-value" id="val-age">â€”</div>
           <input type="text" class="field-input" id="inp-age" placeholder="Age" />
         </div>
         <div class="field-group">
           <div class="field-label">Country</div>
-          <div class="field-value" id="val-country">—</div>
+          <div class="field-value" id="val-country">â€”</div>
           <input type="text" class="field-input" id="inp-country" placeholder="Country" />
         </div>
         <div class="field-group full-width">
           <div class="field-label">Status</div>
-          <div class="field-value" id="val-status">—</div>
+          <div class="field-value" id="val-status">â€”</div>
           <select class="field-input" id="inp-status" style="cursor:pointer;">
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
@@ -136,7 +136,7 @@
         </div>
         <div class="field-group full-width">
           <div class="field-label">Athlete</div>
-          <div class="field-value" id="val-athlete">—</div>
+          <div class="field-value" id="val-athlete">â€”</div>
           <div class="toggle-wrap field-input" id="inp-athlete" style="background:transparent;border:none;padding:4px 0;">
             <label class="toggle">
               <input type="checkbox" id="athleteToggle" onchange="updateToggleLabel()" />
@@ -152,7 +152,7 @@
       <div class="card-title">BACKGROUND</div>
       <div class="field-group">
         <div class="field-label">Training Background</div>
-        <div class="field-value muted" id="val-background">—</div>
+        <div class="field-value muted" id="val-background">â€”</div>
         <textarea class="field-textarea" id="inp-background" placeholder="Enter client background..."></textarea>
       </div>
     </div>
@@ -161,7 +161,7 @@
       <div class="card-title">PHYSICAL CONDITIONS / RESTRICTIONS</div>
       <div class="field-group">
         <div class="field-label">Conditions & Restrictions</div>
-        <div class="field-value muted" id="val-conditions">—</div>
+        <div class="field-value muted" id="val-conditions">â€”</div>
         <input type="text" class="field-input" id="inp-conditions" placeholder="Physical conditions or restrictions..." />
       </div>
     </div>
@@ -170,7 +170,7 @@
       <div class="card-title">OTHER COMMENTS</div>
       <div class="field-group">
         <div class="field-label">Comments</div>
-        <div class="field-value muted" id="val-comments">—</div>
+        <div class="field-value muted" id="val-comments">â€”</div>
         <textarea class="field-textarea" id="inp-comments" placeholder="Other comments..."></textarea>
       </div>
     </div>
@@ -257,13 +257,13 @@
       statusEl.textContent = c.status;
       statusEl.className = `status-badge ${c.status === 'Active' ? 'status-active' : 'status-inactive'}`;
 
-      document.getElementById('val-age').textContent = c.age || '—';
-      document.getElementById('val-country').textContent = c.country || '—';
-      document.getElementById('val-status').textContent = c.status || '—';
+      document.getElementById('val-age').textContent = c.age || 'â€”';
+      document.getElementById('val-country').textContent = c.country || 'â€”';
+      document.getElementById('val-status').textContent = c.status || 'â€”';
       document.getElementById('val-athlete').textContent = c.is_athlete ? 'Yes' : 'No';
-      document.getElementById('val-background').textContent = c.background || '—';
-      document.getElementById('val-conditions').textContent = c.physical_conditions || '—';
-      document.getElementById('val-comments').textContent = c.other_comments || '—';
+      document.getElementById('val-background').textContent = c.background || 'â€”';
+      document.getElementById('val-conditions').textContent = c.physical_conditions || 'â€”';
+      document.getElementById('val-comments').textContent = c.other_comments || 'â€”';
 
       document.getElementById('inp-age').value = c.age || '';
       document.getElementById('inp-country').value = c.country || '';
@@ -353,5 +353,6 @@
     loadClient();
   </script>
 
+  <script src="chat-widget.js"></script>
 </body>
 </html>

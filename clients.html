@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -32,8 +32,8 @@ body{font-family:Inter,sans-serif;margin:0;background:#111;min-height:100vh;colo
 let allClients=[], visibleClients=[], coaches=[], currentProfile=null;
 function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function pack(v){return encodeURIComponent(String(v??''))} function unpack(v){return decodeURIComponent(String(v??''))}
-function formatDate(value){if(!value)return '—';const p=String(value).split('-');return p.length===3?`${p[1]}/${p[2]}/${p[0]}`:value}
-function formatMonths(value){if(value===null||value===undefined||value==='')return '—';const n=Number(value);return Number.isFinite(n)?`${n} month${n===1?'':'s'}`:value}
+function formatDate(value){if(!value)return 'â€”';const p=String(value).split('-');return p.length===3?`${p[1]}/${p[2]}/${p[0]}`:value}
+function formatMonths(value){if(value===null||value===undefined||value==='')return 'â€”';const n=Number(value);return Number.isFinite(n)?`${n} month${n===1?'':'s'}`:value}
 function coachName(id){if(!id)return 'No coach assigned';const c=coaches.find(p=>p.id===id);return c?.full_name||c?.username||'Unknown coach'}
 function showToast(message,type='success'){const t=document.getElementById('toast');t.textContent=message;t.className=`toast ${type} show`;setTimeout(()=>t.className='toast',3000)}
 async function loadCoaches(){const profiles=await rsAuth.dbSelect('profiles','select=id,full_name,username,role,is_active&order=full_name.asc');coaches=profiles.filter(p=>p.is_active&&(p.role==='coach'||p.role==='super_admin'));const sel=document.getElementById('clientCoachId');sel.innerHTML='<option value="">No coach yet / Pending</option>'+coaches.map(c=>`<option value="${esc(c.id)}">${esc(c.full_name||c.username||c.id)}${c.role==='super_admin'?' (Super Admin)':''}</option>`).join('')}
@@ -43,7 +43,7 @@ function coachCell(c){
  const opts=['<option value="">No coach yet / Pending</option>'].concat(coaches.map(coach=>`<option value="${esc(coach.id)}" ${String(coach.id)===String(c.coach_id||'')?'selected':''}>${esc(coach.full_name||coach.username||coach.id)}${coach.role==='super_admin'?' (Super Admin)':''}</option>`)).join('');
  return `<select class="coach-select-inline" onchange="updateClientCoach('${pack(c.id)}',this.value)">${opts}</select>`;
 }
-function renderTable(data){const tbody=document.getElementById('clientTableBody');tbody.innerHTML='';if(!data.length){tbody.innerHTML='<tr class="loading-row"><td colspan="7">No clients found.</td></tr>';return}data.forEach(c=>{const tr=document.createElement('tr');tr.innerHTML=`<td><a class="client-name-link" onclick="goToProfile('${esc(c.id)}')">${esc(c.name)}</a></td><td>${coachCell(c)}</td><td>${esc(c.age||'—')}</td><td>${esc(c.country||'—')}</td><td>${esc(formatDate(c.enrollment_date))}</td><td>${esc(formatMonths(c.enrollment_months))}</td><td><span class="status-badge ${c.status==='Active'?'status-active':'status-inactive'}">${esc(c.status||'—')}</span></td>`;tbody.appendChild(tr)})}
+function renderTable(data){const tbody=document.getElementById('clientTableBody');tbody.innerHTML='';if(!data.length){tbody.innerHTML='<tr class="loading-row"><td colspan="7">No clients found.</td></tr>';return}data.forEach(c=>{const tr=document.createElement('tr');tr.innerHTML=`<td><a class="client-name-link" onclick="goToProfile('${esc(c.id)}')">${esc(c.name)}</a></td><td>${coachCell(c)}</td><td>${esc(c.age||'â€”')}</td><td>${esc(c.country||'â€”')}</td><td>${esc(formatDate(c.enrollment_date))}</td><td>${esc(formatMonths(c.enrollment_months))}</td><td><span class="status-badge ${c.status==='Active'?'status-active':'status-inactive'}">${esc(c.status||'â€”')}</span></td>`;tbody.appendChild(tr)})}
 async function updateClientCoach(idPacked,coachId){
  if(currentProfile?.role!=='super_admin'){showToast('Only Super Admin can assign coaches.','error');return}
  const id=unpack(idPacked);
@@ -67,4 +67,5 @@ async function addClient(){if(currentProfile?.role!=='super_admin'){showToast('O
 /* Client deletion is handled from Settings so account + client record stay in sync. */
 loadClients();
 </script>
+  <script src="chat-widget.js"></script>
 </body></html>
