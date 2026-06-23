@@ -1,15 +1,524 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>RS Fitness | Home</title><style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
-*{box-sizing:border-box}body{margin:0;background:#090909;color:#fff;font-family:Inter,sans-serif;min-height:100vh;background-image:linear-gradient(rgba(0,0,0,.78),rgba(0,0,0,.88)),url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80');background-size:cover;background-position:center}.topbar{height:78px;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(5,5,5,.92);border-bottom:1px solid rgba(139,0,0,.35);backdrop-filter:blur(8px)}.logo-area{display:flex;align-items:center;gap:12px;text-decoration:none}.logo-area img{width:48px;height:48px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 8px rgba(139,0,0,.7))}.logo-area span,.title,.card span{font-family:'Bebas Neue',sans-serif;letter-spacing:3px}.logo-area span{font-size:1.7rem;color:#fff}.logout{background:rgba(139,0,0,.2);border:1px solid rgba(139,0,0,.45);color:#ff6b6b;padding:9px 18px;border-radius:9px;letter-spacing:1px;font-weight:800;cursor:pointer}.page{max-width:1250px;margin:0 auto;padding:70px 28px}.kicker{color:#777;letter-spacing:2px;text-transform:uppercase;font-size:.78rem}.title{font-size:4rem;line-height:.95;margin:12px 0 10px}.title span{color:#cc0000}.sub{color:#aaa;letter-spacing:1px;max-width:850px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px;margin-top:60px}.card{min-height:165px;background:rgba(20,20,20,.88);border:1px solid rgba(139,0,0,.32);border-radius:16px;padding:22px;text-decoration:none;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:12px;transition:.25s;box-shadow:0 18px 45px rgba(0,0,0,.32)}.card:hover{transform:translateY(-5px);border-color:#cc0000;box-shadow:0 20px 50px rgba(139,0,0,.25)}.card svg{width:42px;height:42px;color:#ff1a1a}.card span{font-size:1.05rem}.client-grid{grid-template-columns:repeat(4,minmax(0,1fr));max-width:1000px}.holding{margin-top:50px;background:rgba(20,20,20,.9);border:1px solid rgba(139,0,0,.35);border-radius:18px;padding:30px;max-width:760px}.holding h2{font-family:'Bebas Neue';letter-spacing:3px;font-size:2rem;margin:0 0 10px}.holding h2 span{color:#cc0000}.pill{display:inline-flex;border:1px solid rgba(255,204,102,.45);background:rgba(255,204,102,.1);color:#ffcc66;border-radius:999px;padding:6px 12px;font-size:.72rem;letter-spacing:1px;font-weight:900;text-transform:uppercase;margin-top:16px}.coach-note{margin-top:16px;color:#aaa;line-height:1.55}@media(max-width:1100px){.grid,.client-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.grid,.client-grid{grid-template-columns:1fr 1fr}.title{font-size:3rem}.page{padding-top:35px}}@media(max-width:520px){.grid,.client-grid{grid-template-columns:1fr}}
-</style></head><body>
-<div class="topbar"><a href="home.html" class="logo-area"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a><button class="logout" onclick="rsAuth.signOut()">LOGOUT</button></div>
-<main class="page"><div class="kicker" id="roleLabel">Loading...</div><h1 class="title" id="homeTitle">RS <span>FITNESS</span></h1><div class="sub" id="homeSub">Checking account access...</div><div id="cards" class="grid"></div></main>
-<script src="app-auth.js"></script><script>
-function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function icon(name){const icons={clients:'M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z',coach:'M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.75m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.803m0 0A5.971 5.971 0 0 0 6 18.75m12-6.75a3 3 0 1 0-6 0 3 3 0 0 0 6 0Zm-12 0a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z',pay:'M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5h16.5M2.25 6v9m18-9v9M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z',video:'m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z',reports:'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75M9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25M16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75',gear:'M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827a7.723 7.723 0 0 1 0 .255l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281a6.52 6.52 0 0 1-.22-.127l-1.217.456a1.125 1.125 0 0 1-1.369-.49L2.76 15.88a1.125 1.125 0 0 1 .26-1.431l1.004-.827a6.932 6.932 0 0 1 0-.255l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.332-.183.582-.495.644-.869l.214-1.28Z',program:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',user:'M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0'};return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="${icons[name]}"/></svg>`}
-function card(href,label,ic){return `<a href="${href}" class="card">${icon(ic)}<span>${label}</span></a>`}
-function holding(profile){document.getElementById('cards').className='';document.getElementById('cards').innerHTML=`<section class="holding"><h2>NO <span>COACH ASSIGNED</span></h2><div class="sub">Your account is active, but no coach has been assigned yet. Once RS Fitness assigns your coach, your program and progress tools will appear here.</div><div class="pill">Request a Coach</div><div class="coach-note">For now, please contact RS Fitness or your coach directly to activate your training access.</div></section>`}
-async function init(){const profile=await rsAuth.requireRoles(['super_admin','coach','client']);if(!profile)return;document.getElementById('roleLabel').textContent=`${profile.role.replace('_',' ')} access`;if(profile.role==='client'){document.getElementById('homeTitle').innerHTML='MY <span>ACCOUNT</span>';document.getElementById('homeSub').innerHTML=`${esc(profile.full_name||'Client')} · Client dashboard.`;const cid=profile.client_id;if(!cid){holding(profile);return}const client=await rsAuth.dbGet('clients',`id=eq.${encodeURIComponent(cid)}&select=id,name,coach_id`);if(!client?.coach_id){holding(profile);return}let coachName='My Coach';try{const coach=await rsAuth.dbGet('profiles',`id=eq.${encodeURIComponent(client.coach_id)}&select=full_name,username`);coachName=coach?.full_name||coach?.username||'My Coach'}catch(e){}document.getElementById('cards').className='grid client-grid';document.getElementById('cards').innerHTML=[card(`client-program.html?id=${encodeURIComponent(cid)}`,'My Program','program'),card(`progress-tracker.html?id=${encodeURIComponent(cid)}`,'My Progress','reports'),card(`client-account.html?id=${encodeURIComponent(cid)}`,'My Profile','user'),card(`coaches.html?id=${encodeURIComponent(cid)}`,coachName,'coach')].join('');return}if(profile.role==='coach'){document.getElementById('homeTitle').innerHTML='RS <span>COACH</span>';document.getElementById('homeSub').textContent='Coach dashboard. You only see clients assigned to you.';document.getElementById('cards').innerHTML=[card('clients.html','My Clients','clients'),card('coaches.html','Coaches','coach'),card('workouts.html','Workout Repository','video'),card('reports.html','Reports','reports')].join('');return}document.getElementById('homeTitle').innerHTML='RS <span>ADMIN</span>';document.getElementById('homeSub').textContent='Super admin dashboard.';document.getElementById('cards').innerHTML=[card('clients.html','Clients','clients'),card('coaches.html','Coaches','coach'),card('payments.html','Payments','pay'),card('workouts.html','Workout Repository','video'),card('reports.html','Reports','reports'),card('settings.html','Settings','gear')].join('')}
-init();
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RS Fitness | Home</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #090909;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+      z-index: 0;
+    }
+
+    .slide.active { opacity: 1; }
+    .slide-1 { background-image: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=1600&q=80'); }
+    .slide-2 { background-image: url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1600&q=80'); }
+    .slide-3 { background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80'); }
+    .slide-4 { background-image: url('https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=1600&q=80'); }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.88), rgba(0,0,0,.6), rgba(0,0,0,.82));
+      z-index: 1;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 32px;
+      background: rgba(5,5,5,.78);
+      border-bottom: 1px solid rgba(139,0,0,.34);
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-area {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: white;
+      text-decoration: none;
+    }
+
+    .logo-area img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(139,0,0,.75));
+      background: white;
+    }
+
+    .logo-area span,
+    .title,
+    .panel-title,
+    .icon-card span {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 3px;
+    }
+
+    .logo-area span { font-size: 1.75rem; }
+
+    .logout-btn {
+      background: rgba(139,0,0,.2);
+      border: 1px solid rgba(139,0,0,.5);
+      color: #ff8c8c;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(139,0,0,.45);
+      border-color: #cc0000;
+      color: white;
+    }
+
+    #app {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .welcome-area {
+      padding: 70px 32px 10px;
+      max-width: 1250px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .welcome-area h2 {
+      margin: 0;
+      color: #aaa;
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    .welcome-area h1 {
+      margin: 14px 0 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      color: white;
+      font-size: clamp(3.2rem, 6vw, 5.2rem);
+      line-height: .88;
+      letter-spacing: 4px;
+    }
+
+    .welcome-area span,
+    .panel-title span { color: #e00000; }
+
+    .muted {
+      color: #b8b8b8;
+      line-height: 1.6;
+      letter-spacing: .4px;
+    }
+
+    .icon-grid {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 32px 70px;
+    }
+
+    .grid-inner {
+      width: min(1250px, 100%);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 18px;
+    }
+
+    .grid-inner.client {
+      width: min(900px, 100%);
+    }
+
+    .icon-card {
+      min-height: 155px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px 14px;
+      border-radius: 16px;
+      background: rgba(20,20,20,.78);
+      border: 1px solid rgba(139,0,0,.35);
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: .25s;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      backdrop-filter: blur(8px);
+    }
+
+    .icon-card:hover {
+      transform: translateY(-5px);
+      background: rgba(139,0,0,.22);
+      border-color: #cc0000;
+      box-shadow: 0 24px 55px rgba(139,0,0,.22);
+    }
+
+    .icon-card svg {
+      width: 42px;
+      height: 42px;
+      color: #ff1010;
+    }
+
+    .icon-card span {
+      color: white;
+      font-size: 1.05rem;
+      line-height: 1.05;
+    }
+
+    .holding-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .holding {
+      max-width: 760px;
+      width: 100%;
+      background: rgba(20,20,20,.86);
+      border: 1px solid rgba(139,0,0,.38);
+      border-radius: 22px;
+      padding: 38px;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0,0,0,.35);
+    }
+
+    .panel-title {
+      font-size: 2.3rem;
+      margin-top: 8px;
+    }
+
+    .badge {
+      display: inline-flex;
+      border-radius: 999px;
+      border: 1px solid rgba(255,204,102,.45);
+      background: rgba(255,204,102,.1);
+      color: #ffcc66;
+      padding: 7px 13px;
+      font-size: .74rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      color: #eee;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .btn.red {
+      background: linear-gradient(135deg,#8B0000,#cc0000);
+      border: 0;
+      color: white;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px 18px;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.35);
+      transition: .3s;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background: #cc0000;
+      width: 22px;
+      border-radius: 99px;
+    }
+
+    .loading {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 980px) {
+      body { overflow: auto; }
+      .content { min-height: 100vh; height: auto; }
+      .grid-inner, .grid-inner.client { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .welcome-area { padding-top: 38px; }
+      .icon-grid { align-items: flex-start; padding-bottom: 40px; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 14px 18px; }
+      .logo-area span { font-size: 1.35rem; }
+      .grid-inner, .grid-inner.client { grid-template-columns: 1fr; }
+      .icon-card { min-height: 135px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="slide slide-1 active"></div>
+  <div class="slide slide-2"></div>
+  <div class="slide slide-3"></div>
+  <div class="slide slide-4"></div>
+  <div class="overlay"></div>
+
+  <div class="content">
+    <div class="topbar">
+      <a href="home.html" class="logo-area">
+        <img src="logo.jpg" alt="RS Fitness" />
+        <span>RS FITNESS</span>
+      </a>
+      <button class="logout-btn" onclick="rsAuth.signOut()">LOGOUT</button>
+    </div>
+
+    <div id="app"><div class="loading">Loading dashboard...</div></div>
+
+    <div class="dots">
+      <div class="dot active" onclick="goToSlide(0)"></div>
+      <div class="dot" onclick="goToSlide(1)"></div>
+      <div class="dot" onclick="goToSlide(2)"></div>
+      <div class="dot" onclick="goToSlide(3)"></div>
+    </div>
+  </div>
+
+  <script src="app-auth.js"></script>
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let current = 0;
+    let timer;
+
+    function goToSlide(index) {
+      slides[current].classList.remove('active');
+      dots[current].classList.remove('active');
+      current = index;
+      slides[current].classList.add('active');
+      dots[current].classList.add('active');
+      resetTimer();
+    }
+
+    function nextSlide() {
+      goToSlide((current + 1) % slides.length);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(nextSlide, 5000);
+    }
+
+    resetTimer();
+
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[char]));
+    }
+
+    function iconCard(href, label, svg) {
+      return `<a href="${href}" class="icon-card">${svg}<span>${label}</span></a>`;
+    }
+
+    const icons = {
+      clients: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" /></svg>`,
+      coach: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a5.971 5.971 0 0 0-.941 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" /></svg>`,
+      messages: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" /></svg>`,
+      payments: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>`,
+      workouts: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" /></svg>`,
+      reports: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1-1.125 1h-2.25a1.125 1.125 0 0 1-1.125-1V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1-1.125 1h-2.25a1.125 1.125 0 0 1-1.125-1V4.125Z" /></svg>`,
+      settings: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.869-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.332-.183.582-.495.644-.869l.214-1.28Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" /></svg>`,
+      program: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2.25 4.5H6.75A2.25 2.25 0 0 1 4.5 18.75V5.25A2.25 2.25 0 0 1 6.75 3h7.5L19.5 8.25v10.5a2.25 2.25 0 0 1-2.25 2.25Z" /></svg>`,
+      profile: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0" /></svg>`
+    };
+
+    function renderAdmin(profile) {
+      const isSuper = profile.role === 'super_admin';
+      const cards = isSuper
+        ? [
+            iconCard('clients.html', 'Clients', icons.clients),
+            iconCard('coaches.html', 'Coaches', icons.coach),
+            iconCard('messages.html', 'Messages', icons.messages),
+            iconCard('payments.html', 'Payments', icons.payments),
+            iconCard('workouts.html', 'Workout Repository', icons.workouts),
+            iconCard('reports.html', 'Reports', icons.reports),
+            iconCard('settings.html', 'Settings', icons.settings)
+          ].join('')
+        : [
+            iconCard('clients.html', 'My Clients', icons.clients),
+            iconCard('messages.html', 'Messages', icons.messages),
+            iconCard('coaches.html', 'Coaches', icons.coach),
+            iconCard('workouts.html', 'Workout Repository', icons.workouts),
+            iconCard('reports.html', 'Reports', icons.reports)
+          ].join('');
+
+      document.getElementById('app').innerHTML = `
+        <div class="welcome-area">
+          <h2>${isSuper ? 'Super Admin Access' : 'Coach Access'}</h2>
+          <h1>RS <span>${isSuper ? 'ADMIN' : 'COACH'}</span></h1>
+          <div class="muted">${isSuper ? 'Super admin dashboard.' : 'Assigned-client coaching dashboard.'}</div>
+        </div>
+        <div class="icon-grid"><div class="grid-inner">${cards}</div></div>
+      `;
+    }
+
+    function renderClientReady(client, profile) {
+      const id = encodeURIComponent(client.id);
+      document.getElementById('app').innerHTML = `
+        <div class="welcome-area">
+          <h2>Client Access</h2>
+          <h1>${esc(client.name || profile.full_name || 'MY')} <span>ACCOUNT</span></h1>
+          <div class="muted">Your assigned coach has been set. Program, progress, and messaging tools are available below.</div>
+        </div>
+        <div class="icon-grid">
+          <div class="grid-inner client">
+            ${iconCard(`client-program.html?id=${id}`, 'My Program', icons.program)}
+            ${iconCard(`progress-tracker.html?id=${id}`, 'My Progress', icons.reports)}
+            ${iconCard('messages.html', 'Messages', icons.messages)}
+            ${iconCard(`client-account.html?id=${id}`, 'My Account', icons.profile)}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClientHolding(client, profile) {
+      const id = encodeURIComponent(client?.id || profile.client_id || '');
+      document.getElementById('app').innerHTML = `
+        <div class="holding-wrap">
+          <div class="holding">
+            <div class="badge">Pending Coach Assignment</div>
+            <div class="panel-title">NO <span>COACH ASSIGNED</span></div>
+            <div class="muted">Your account is active, but no coach has been assigned yet. Once RS Fitness assigns a coach, your program, progress tracker, and messaging will appear here.</div>
+            <div class="btn-row">
+              <a class="btn red" href="mailto:rsfitness@example.com?subject=Coach%20Assignment%20Request">REQUEST A COACH</a>
+              <a class="btn" href="client-account.html?id=${id}">MY ACCOUNT</a>
+              <a class="btn" href="home.html">REFRESH</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function initHome() {
+      try {
+        const profile = await rsAuth.getCurrentProfile();
+
+        if (!profile) {
+          location.href = 'index.html';
+          return;
+        }
+
+        if (profile.role === 'super_admin' || profile.role === 'coach') {
+          renderAdmin(profile);
+          return;
+        }
+
+        if (profile.role === 'client') {
+          if (!profile.client_id) {
+            document.getElementById('app').innerHTML = `
+              <div class="holding-wrap">
+                <div class="holding">
+                  <div class="badge">Pending Setup</div>
+                  <div class="panel-title">ACCOUNT <span>NOT LINKED</span></div>
+                  <div class="muted">This login is not linked to a client profile yet. Please contact RS Fitness.</div>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          const client = await rsAuth.dbGet('clients', `id=eq.${encodeURIComponent(profile.client_id)}&select=*`);
+
+          if (!client) {
+            document.getElementById('app').innerHTML = `
+              <div class="holding-wrap">
+                <div class="holding">
+                  <div class="badge">Pending Setup</div>
+                  <div class="panel-title">CLIENT <span>PROFILE MISSING</span></div>
+                  <div class="muted">Please contact RS Fitness.</div>
+                </div>
+              </div>
+            `;
+            return;
+          }
+
+          if (client.coach_id) renderClientReady(client, profile);
+          else renderClientHolding(client, profile);
+          return;
+        }
+
+        renderAdmin(profile);
+      } catch (error) {
+        console.error(error);
+        rsAuth.clear();
+        location.href = 'index.html';
+      }
+    }
+
+    initHome();
+  </script>
+</body>
+</html>

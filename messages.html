@@ -108,6 +108,7 @@
     function showMainError(title, message){document.querySelector('.shell').innerHTML=`<div class="panel locked" style="grid-column:1/-1"><div class="locked-card"><div class="locked-title">${esc(title)} <span>ERROR</span></div><div class="muted">${esc(message)}</div><div class="muted small" style="margin-top:16px">If this is the first chat setup, run chat-schema.sql in Supabase first.</div></div></div>`}
 
     async function setupRealtimeClient(){
+      const session = rsAuth.getCurrentProfile ? rsAuth.getStoredProfile && rsAuth.getStoredProfile() : null;
       const authSession = JSON.parse(localStorage.getItem('rs_auth_session') || 'null');
 
       if (!authSession?.access_token || !window.supabase) {
@@ -116,11 +117,6 @@
       }
 
       const client = window.supabase.createClient(RS_SUPABASE_URL, RS_SUPABASE_KEY, {
-        global: {
-          headers: {
-            Authorization: `Bearer ${authSession.access_token}`
-          }
-        },
         auth: {
           persistSession: false,
           autoRefreshToken: false,
@@ -132,12 +128,6 @@
           }
         }
       });
-
-      try {
-        if (client.realtime?.setAuth) client.realtime.setAuth(authSession.access_token);
-      } catch (e) {
-        console.warn('Realtime token warning:', e);
-      }
 
       if (authSession.refresh_token) {
         try {
@@ -163,8 +153,8 @@
       await loadCoaches();
 
       if (currentProfile.role === 'client') {
-        document.getElementById('sidebar').classList.add('collapsed');
         document.getElementById('listTitle').innerHTML = 'MY <span>COACH</span>';
+        document.getElementById('searchInput').placeholder = 'Search coach...';
         document.getElementById('pageSub').textContent = 'Chat directly with your assigned coach.';
 
         if (!currentProfile.client_id) {
@@ -217,8 +207,10 @@
 
       list.innerHTML = filtered.map(c => {
         const active = selectedClient && String(selectedClient.id) === String(c.id) ? 'active' : '';
-        const meta = c.coach_id ? `Coach: ${coachName(c.coach_id)}` : 'No coach assigned';
-        return `<button class="client-card ${active}" onclick="openClientChat('${pack(c.id)}')"><div class="avatar">${esc(initial(c.name))}</div><div><div class="client-name">${esc(c.name||'Client')}</div><div class="client-meta">${esc(meta)}</div></div></button>`;
+        const isClientView = currentProfile?.role === 'client';
+        const displayName = isClientView ? coachName(c.coach_id) : (c.name || 'Client');
+        const meta = isClientView ? 'Your assigned coach' : (c.coach_id ? `Coach: ${coachName(c.coach_id)}` : 'No coach assigned');
+        return `<button class="client-card ${active}" onclick="openClientChat('${pack(c.id)}')"><div class="avatar">${esc(initial(displayName))}</div><div><div class="client-name">${esc(displayName)}</div><div class="client-meta">${esc(meta)}</div></div></button>`;
       }).join('');
     }
 
@@ -232,8 +224,9 @@
       senderProfiles = {};
       renderClientList();
 
-      document.getElementById('chatName').textContent = client.name || 'Client';
-      document.getElementById('chatSub').textContent = client.coach_id ? `Coach: ${coachName(client.coach_id)}` : 'No coach assigned';
+      const isClientView = currentProfile?.role === 'client';
+      document.getElementById('chatName').textContent = isClientView ? coachName(client.coach_id) : (client.name || 'Client');
+      document.getElementById('chatSub').textContent = isClientView ? 'Your assigned coach' : (client.coach_id ? `Coach: ${coachName(client.coach_id)}` : 'No coach assigned');
       document.getElementById('messages').innerHTML = '<div class="empty">Opening secure chat...</div>';
       document.getElementById('messageInput').disabled = true;
       document.getElementById('sendBtn').disabled = true;
