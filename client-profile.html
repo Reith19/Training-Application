@@ -126,6 +126,16 @@
           <div class="field-value" id="val-country">â€”</div>
           <input type="text" class="field-input" id="inp-country" placeholder="Country" />
         </div>
+        <div class="field-group">
+          <div class="field-label">Enrollment Date</div>
+          <div class="field-value" id="val-enrollment-date">N/A</div>
+          <input type="date" class="field-input" id="inp-enrollment-date" />
+        </div>
+        <div class="field-group">
+          <div class="field-label">Months Enrolled</div>
+          <div class="field-value" id="val-enrollment-months">N/A</div>
+          <input type="number" min="1" step="1" class="field-input" id="inp-enrollment-months" placeholder="Example: 3" />
+        </div>
         <div class="field-group full-width">
           <div class="field-label">Status</div>
           <div class="field-value" id="val-status">â€”</div>
@@ -247,6 +257,19 @@
       window.location.href = `progress-tracker.html?id=${clientId}`;
     }
 
+    function formatEnrollmentDate(value) {
+      if (!value) return 'N/A';
+      const date = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(date.getTime())) return 'N/A';
+      return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function formatEnrollmentMonths(value) {
+      if (value === null || value === undefined || value === '') return 'N/A';
+      const num = Number(value);
+      if (!Number.isFinite(num) || num <= 0) return 'N/A';
+      return `${num} month${num === 1 ? '' : 's'}`;
+    }
     function populateProfile(c) {
       const nameParts = c.name.split(' ');
       const lastName = nameParts.pop();
@@ -267,6 +290,8 @@
 
       document.getElementById('inp-age').value = c.age || '';
       document.getElementById('inp-country').value = c.country || '';
+      document.getElementById('inp-enrollment-date').value = c.enrollment_date || '';
+      document.getElementById('inp-enrollment-months').value = c.enrollment_months ?? '';
       document.getElementById('inp-status').value = c.status || 'Active';
       document.getElementById('inp-background').value = c.background || '';
       document.getElementById('inp-conditions').value = c.physical_conditions || '';
@@ -303,6 +328,8 @@
       const updates = {
         age: document.getElementById('inp-age').value.trim(),
         country: document.getElementById('inp-country').value.trim(),
+        enrollment_date: document.getElementById('inp-enrollment-date').value || null,
+        enrollment_months: document.getElementById('inp-enrollment-months').value ? Number(document.getElementById('inp-enrollment-months').value) : null,
         status: document.getElementById('inp-status').value,
         is_athlete: document.getElementById('athleteToggle').checked,
         background: document.getElementById('inp-background').value.trim(),
@@ -356,3 +383,4 @@
   <script src="chat-widget.js"></script>
 </body>
 </html>
+
