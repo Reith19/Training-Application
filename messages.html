@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RS Fitness | Messages</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    *{box-sizing:border-box}
+    body{margin:0;background:#090909;color:#fff;font-family:'Inter',sans-serif;min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at top left,rgba(204,0,0,.18),transparent 34%),linear-gradient(135deg,#090909,#141414);z-index:-2}
+    body:after{content:"";position:fixed;inset:0;background:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=70') center/cover;opacity:.08;z-index:-3}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;border-bottom:1px solid rgba(139,0,0,.35);background:rgba(10,10,10,.88);backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff}
+    .brand img{width:42px;height:42px;object-fit:contain;border-radius:50%;filter:drop-shadow(0 0 8px rgba(139,0,0,.6))}
+    .brand span,.page-title,.section-title{font-family:'Bebas Neue',sans-serif;letter-spacing:3px}
+    .brand span{font-size:1.55rem}
+    .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .btn{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#eee;border-radius:10px;padding:10px 14px;font-size:.74rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .btn:hover{border-color:#cc0000;background:rgba(139,0,0,.22);color:white}
+    .btn.red{border:0;background:linear-gradient(135deg,#8B0000,#cc0000);color:white}
+    .btn.danger{border-color:rgba(255,70,70,.35);color:#ff8c8c;background:rgba(139,0,0,.12)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .wrap{padding:28px;max-width:1500px;margin:0 auto}
+    .header{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:22px}
+    .page-title{font-size:3rem;line-height:.9;margin:0}.page-title span{color:#cc0000}.muted{color:#9ca3af;line-height:1.55}.small{font-size:.8rem}.status-pill{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:999px;padding:8px 12px;color:#aaa;font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}.dot{width:8px;height:8px;border-radius:999px;background:#777}.dot.live{background:#00c864;box-shadow:0 0 12px rgba(0,200,100,.8)}.dot.warn{background:#ffcc66;box-shadow:0 0 12px rgba(255,204,102,.7)}
+    .shell{display:grid;grid-template-columns:340px 1fr;gap:18px;min-height:calc(100vh - 190px)}
+    .panel{background:rgba(18,18,18,.88);border:1px solid rgba(139,0,0,.28);border-radius:20px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+    .panel-head{padding:20px 22px;border-bottom:1px solid rgba(139,0,0,.25);background:rgba(255,255,255,.025)}
+    .section-title{font-size:1.6rem}.section-title span{color:#cc0000}
+    .search{width:100%;margin-top:14px;background:#1d1d1d;border:1px solid rgba(255,255,255,.12);border-radius:12px;color:white;padding:12px 13px;outline:none}.search:focus{border-color:#cc0000;box-shadow:0 0 0 3px rgba(204,0,0,.12)}
+    .client-list{max-height:calc(100vh - 295px);overflow:auto;padding:10px}.client-card{width:100%;text-align:left;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;color:white;cursor:pointer;margin-bottom:10px;transition:.2s}.client-card:hover,.client-card.active{border-color:#cc0000;background:rgba(139,0,0,.2)}.avatar{width:42px;height:42px;border-radius:999px;background:linear-gradient(135deg,#8B0000,#cc0000);display:grid;place-items:center;font-weight:900;letter-spacing:1px;flex:0 0 auto}.client-name{font-weight:900}.client-meta{color:#9ca3af;font-size:.78rem;margin-top:4px}.empty{padding:28px;color:#9ca3af;text-align:center;line-height:1.6}
+    .chat{display:grid;grid-template-rows:auto 1fr auto;min-height:calc(100vh - 190px)}.chat-head{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:20px 22px;border-bottom:1px solid rgba(139,0,0,.25);background:rgba(255,255,255,.025)}.chat-name{font-weight:950;font-size:1.1rem}.chat-sub{font-size:.8rem;color:#9ca3af;margin-top:3px}.messages{padding:22px;overflow:auto;max-height:calc(100vh - 350px);display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}.message-row{display:flex;align-items:flex-end;gap:8px}.message-row.mine{justify-content:flex-end}.bubble{max-width:min(720px,78%);border-radius:18px;padding:12px 14px;border:1px solid rgba(255,255,255,.1);background:#181818}.message-row.mine .bubble{background:linear-gradient(135deg,#8B0000,#cc0000);border-color:rgba(255,255,255,.08)}.message-row.deleted .bubble{background:rgba(255,255,255,.035);border-style:dashed;color:#9ca3af}.msg-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:6px}.sender{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;font-weight:900;color:#d1d5db}.message-row.mine .sender{color:#fff}.time{font-size:.68rem;color:#9ca3af;white-space:nowrap}.message-row.mine .time{color:rgba(255,255,255,.75)}.msg-text{white-space:pre-wrap;line-height:1.5;font-size:.94rem}.delete-link{border:0;background:transparent;color:#ffb3b3;font-size:.7rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;cursor:pointer;padding:5px 2px}.delete-link:hover{color:white}.composer{padding:16px 18px;border-top:1px solid rgba(139,0,0,.25);display:grid;grid-template-columns:1fr auto;gap:12px;background:rgba(10,10,10,.5)}textarea{width:100%;min-height:54px;max-height:150px;resize:vertical;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:#1d1d1d;color:white;padding:14px;outline:none;font-family:Inter,sans-serif}textarea:focus{border-color:#cc0000;box-shadow:0 0 0 3px rgba(204,0,0,.12)}.locked{display:flex;align-items:center;justify-content:center;min-height:420px;text-align:center;padding:40px}.locked-card{max-width:640px}.locked-title{font-family:'Bebas Neue',sans-serif;letter-spacing:3px;font-size:2.2rem}.locked-title span{color:#cc0000}.mobile-client-toggle{display:none;margin-bottom:12px}
+    @media(max-width:900px){.wrap{padding:18px}.header{align-items:flex-start;flex-direction:column}.page-title{font-size:2.3rem}.shell{grid-template-columns:1fr}.panel.sidebar.collapsed{display:none}.mobile-client-toggle{display:inline-flex}.client-list{max-height:320px}.chat{min-height:70vh}.messages{max-height:55vh}.composer{grid-template-columns:1fr}.bubble{max-width:88%}.topbar{padding:14px 16px}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="home.html" class="brand"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a>
+    <div class="top-actions">
+      <a class="btn" href="home.html">Home</a>
+      <button class="btn" onclick="manualRefresh()">Refresh</button>
+      <button class="btn danger" onclick="rsAuth.signOut()">Logout</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <div class="header">
+      <div>
+        <h1 class="page-title">LIVE <span>MESSAGES</span></h1>
+        <div class="muted" id="pageSub">Realtime coach-client chat.</div>
+      </div>
+      <div class="status-pill"><span class="dot warn" id="liveDot"></span><span id="liveStatus">Starting realtime...</span></div>
+    </div>
+
+    <button class="btn mobile-client-toggle" onclick="toggleSidebar()">Show / Hide Chat List</button>
+
+    <div class="shell">
+      <aside class="panel sidebar" id="sidebar">
+        <div class="panel-head">
+          <div class="section-title" id="listTitle">CLIENT <span>CHATS</span></div>
+          <input class="search" id="searchInput" placeholder="Search clients..." oninput="renderClientList()" />
+        </div>
+        <div class="client-list" id="clientList"><div class="empty">Loading chats...</div></div>
+      </aside>
+
+      <section class="panel chat" id="chatPanel">
+        <div class="chat-head">
+          <div>
+            <div class="chat-name" id="chatName">Select a chat</div>
+            <div class="chat-sub" id="chatSub">Choose a client conversation from the list.</div>
+          </div>
+          <div class="status-pill"><span class="dot" id="threadDot"></span><span id="threadStatus">No thread</span></div>
+        </div>
+        <div class="messages" id="messages"><div class="empty">No chat selected yet.</div></div>
+        <div class="composer">
+          <textarea id="messageInput" placeholder="Type a message..." disabled></textarea>
+          <button class="btn red" id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app-auth.js"></script>
+  <script>
+    let currentProfile = null;
+    let chatClient = null;
+    let realtimeChannel = null;
+    let allClients = [];
+    let allCoaches = [];
+    let selectedClient = null;
+    let selectedConversation = null;
+    let senderProfiles = {};
+    let firstLoadDone = false;
+
+    function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function initial(name){return String(name||'?').trim().slice(0,1).toUpperCase()||'?'}
+    function pack(v){return encodeURIComponent(String(v||''))}
+    function unpack(v){return decodeURIComponent(String(v||''))}
+    function coachName(id){const coach=allCoaches.find(c=>String(c.id)===String(id));return coach?.full_name||coach?.username||'Coach'}
+    function isMine(msg){return String(msg.sender_id||'')===String(currentProfile?.id||'')}
+    function canDelete(msg){return !msg.deleted_for_everyone && (isMine(msg) || currentProfile?.role === 'super_admin')}
+    function formatTime(value){try{return new Date(value).toLocaleString([], {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'})}catch{return ''}}
+    function setLiveStatus(text, mode='warn'){document.getElementById('liveStatus').textContent=text;const dot=document.getElementById('liveDot');dot.className='dot '+(mode==='live'?'live':'warn')}
+    function setThreadStatus(text, mode='warn'){document.getElementById('threadStatus').textContent=text;const dot=document.getElementById('threadDot');dot.className='dot '+(mode==='live'?'live':'warn')}
+    function showMainError(title, message){document.querySelector('.shell').innerHTML=`<div class="panel locked" style="grid-column:1/-1"><div class="locked-card"><div class="locked-title">${esc(title)} <span>ERROR</span></div><div class="muted">${esc(message)}</div><div class="muted small" style="margin-top:16px">If this is the first chat setup, run chat-schema.sql in Supabase first.</div></div></div>`}
+
+    async function setupRealtimeClient(){
+      const authSession = JSON.parse(localStorage.getItem('rs_auth_session') || 'null');
+
+      if (!authSession?.access_token || !window.supabase) {
+        setLiveStatus('Realtime unavailable', 'warn');
+        return null;
+      }
+
+      const client = window.supabase.createClient(RS_SUPABASE_URL, RS_SUPABASE_KEY, {
+        global: {
+          headers: {
+            Authorization: `Bearer ${authSession.access_token}`
+          }
+        },
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false
+        },
+        realtime: {
+          params: {
+            eventsPerSecond: 10
+          }
+        }
+      });
+
+      try {
+        if (client.realtime?.setAuth) client.realtime.setAuth(authSession.access_token);
+      } catch (e) {
+        console.warn('Realtime token warning:', e);
+      }
+
+      if (authSession.refresh_token) {
+        try {
+          await client.auth.setSession({
+            access_token: authSession.access_token,
+            refresh_token: authSession.refresh_token
+          });
+        } catch (e) {
+          console.warn('Realtime auth session warning:', e);
+        }
+      }
+
+      setLiveStatus('Realtime ready', 'live');
+      return client;
+    }
+
+    async function loadCoaches(){
+      allCoaches = await rsAuth.dbSelect('profiles','select=id,full_name,username,role,is_active&order=full_name.asc');
+      allCoaches = allCoaches.filter(p => p.is_active && (p.role === 'coach' || p.role === 'super_admin'));
+    }
+
+    async function loadAllowedClients(){
+      await loadCoaches();
+
+      if (currentProfile.role === 'client') {
+        document.getElementById('sidebar').classList.add('collapsed');
+        document.getElementById('listTitle').innerHTML = 'MY <span>COACH</span>';
+        document.getElementById('pageSub').textContent = 'Chat directly with your assigned coach.';
+
+        if (!currentProfile.client_id) {
+          showMainError('ACCOUNT LINK', 'This login is not linked to a client record yet.');
+          return;
+        }
+
+        const client = await rsAuth.dbGet('clients',`id=eq.${encodeURIComponent(currentProfile.client_id)}&select=*`);
+        if (!client) {
+          showMainError('CLIENT PROFILE', 'Your linked client profile was not found.');
+          return;
+        }
+
+        if (!client.coach_id) {
+          showMainError('NO COACH', 'You do not have an assigned coach yet. Chat will unlock once a coach is assigned.');
+          return;
+        }
+
+        allClients = [client];
+        renderClientList();
+        await openClientChat(pack(client.id));
+        return;
+      }
+
+      document.getElementById('pageSub').textContent = currentProfile.role === 'coach'
+        ? 'Realtime messaging with assigned clients only.'
+        : 'Realtime messaging for all assigned client-coach chats.';
+
+      const query = currentProfile.role === 'coach'
+        ? `coach_id=eq.${encodeURIComponent(currentProfile.id)}&order=name.asc`
+        : 'order=name.asc';
+
+      const rows = await rsAuth.dbSelect('clients', query);
+      allClients = rows.filter(c => currentProfile.role === 'super_admin' ? !!c.coach_id : true);
+      renderClientList();
+    }
+
+    function renderClientList(){
+      const list = document.getElementById('clientList');
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const filtered = allClients.filter(c => {
+        const hay = `${c.name||''} ${coachName(c.coach_id)||''}`.toLowerCase();
+        return !q || hay.includes(q);
+      });
+
+      if (!filtered.length) {
+        list.innerHTML = '<div class="empty">No available client chats yet.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(c => {
+        const active = selectedClient && String(selectedClient.id) === String(c.id) ? 'active' : '';
+        const meta = c.coach_id ? `Coach: ${coachName(c.coach_id)}` : 'No coach assigned';
+        return `<button class="client-card ${active}" onclick="openClientChat('${pack(c.id)}')"><div class="avatar">${esc(initial(c.name))}</div><div><div class="client-name">${esc(c.name||'Client')}</div><div class="client-meta">${esc(meta)}</div></div></button>`;
+      }).join('');
+    }
+
+    async function openClientChat(clientIdPacked){
+      const clientId = unpack(clientIdPacked);
+      const client = allClients.find(c => String(c.id) === String(clientId));
+      if (!client) return;
+
+      selectedClient = client;
+      selectedConversation = null;
+      senderProfiles = {};
+      renderClientList();
+
+      document.getElementById('chatName').textContent = client.name || 'Client';
+      document.getElementById('chatSub').textContent = client.coach_id ? `Coach: ${coachName(client.coach_id)}` : 'No coach assigned';
+      document.getElementById('messages').innerHTML = '<div class="empty">Opening secure chat...</div>';
+      document.getElementById('messageInput').disabled = true;
+      document.getElementById('sendBtn').disabled = true;
+      setThreadStatus('Opening...', 'warn');
+
+      try {
+        const conversation = await rsAuth.dbRpc('get_or_create_chat_conversation', { target_client_id: client.id });
+        selectedConversation = Array.isArray(conversation) ? conversation[0] : conversation;
+
+        if (!selectedConversation?.id) {
+          throw new Error('Conversation was not created.');
+        }
+
+        document.getElementById('messageInput').disabled = false;
+        document.getElementById('sendBtn').disabled = false;
+        setThreadStatus('Live thread', 'live');
+
+        await loadMessages(true);
+        subscribeToConversation(selectedConversation.id);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('messages').innerHTML = `<div class="empty">${esc(e.message || e)}<br><br>Run chat-schema.sql first if this is the first setup.</div>`;
+        setThreadStatus('Blocked', 'warn');
+      }
+    }
+
+    async function loadSenderProfiles(messages){
+      const ids = [...new Set(messages.map(m => m.sender_id).filter(Boolean))];
+      if (!ids.length) return;
+
+      const missing = ids.filter(id => !senderProfiles[id]);
+      if (!missing.length) return;
+
+      try {
+        const rows = await rsAuth.dbSelect('profiles',`id=in.(${missing.map(encodeURIComponent).join(',')})&select=id,full_name,username,role`);
+        rows.forEach(p => senderProfiles[p.id] = p);
+      } catch (e) {
+        console.warn('Could not load sender profiles:', e);
+      }
+    }
+
+    function senderName(message){
+      if (message.deleted_for_everyone) return 'Deleted';
+      if (isMine(message)) return 'You';
+      const p = senderProfiles[message.sender_id];
+      return p?.full_name || p?.username || 'RS Fitness';
+    }
+
+    async function loadMessages(scrollBottom=false){
+      if (!selectedConversation?.id) return;
+
+      const rows = await rsAuth.dbSelect(
+        'chat_messages',
+        `conversation_id=eq.${encodeURIComponent(selectedConversation.id)}&select=*&order=created_at.asc`
+      );
+
+      await loadSenderProfiles(rows);
+      renderMessages(rows);
+
+      if (scrollBottom || !firstLoadDone) {
+        const box = document.getElementById('messages');
+        requestAnimationFrame(() => { box.scrollTop = box.scrollHeight; });
+      }
+
+      firstLoadDone = true;
+    }
+
+    function renderMessages(rows){
+      const box = document.getElementById('messages');
+
+      if (!rows.length) {
+        box.innerHTML = '<div class="empty">No messages yet. Send the first one.</div>';
+        return;
+      }
+
+      box.innerHTML = rows.map(m => {
+        const mine = isMine(m) ? 'mine' : '';
+        const deleted = m.deleted_for_everyone ? 'deleted' : '';
+        const body = m.deleted_for_everyone ? 'This message was deleted.' : esc(m.message_text || '');
+        const delButton = canDelete(m) ? `<button class="delete-link" onclick="deleteMessage('${pack(m.id)}')">Delete</button>` : '';
+        return `<div class="message-row ${mine} ${deleted}"><div class="bubble"><div class="msg-top"><span class="sender">${esc(senderName(m))}</span><span class="time">${esc(formatTime(m.created_at))}</span></div><div class="msg-text">${body}</div>${delButton}</div></div>`;
+      }).join('');
+    }
+
+    function subscribeToConversation(conversationId){
+      if (!chatClient) {
+        setLiveStatus('Manual refresh only', 'warn');
+        return;
+      }
+
+      if (realtimeChannel) {
+        chatClient.removeChannel(realtimeChannel);
+        realtimeChannel = null;
+      }
+
+      setLiveStatus('Connecting live...', 'warn');
+
+      realtimeChannel = chatClient
+        .channel(`rs-chat-${conversationId}`)
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'chat_messages',
+          filter: `conversation_id=eq.${conversationId}`
+        }, async () => {
+          await loadMessages(true);
+        })
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') setLiveStatus('Live connected', 'live');
+          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT' || status === 'CLOSED') setLiveStatus('Realtime reconnecting', 'warn');
+        });
+    }
+
+    async function sendMessage(){
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+
+      if (!selectedConversation?.id) {
+        rsAuth.toast('Select a chat first.', 'error');
+        return;
+      }
+
+      if (!text) return;
+
+      const btn = document.getElementById('sendBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      try {
+        await rsAuth.dbInsert('chat_messages', {
+          conversation_id: selectedConversation.id,
+          sender_id: currentProfile.id,
+          message_text: text
+        });
+
+        input.value = '';
+        await loadMessages(true);
+      } catch (e) {
+        console.error(e);
+        rsAuth.toast('Message failed: ' + (e.message || e), 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send';
+        input.focus();
+      }
+    }
+
+    async function deleteMessage(messageIdPacked){
+      const messageId = unpack(messageIdPacked);
+      if (!confirm('Delete this message for both people?')) return;
+
+      try {
+        await rsAuth.dbRpc('delete_chat_message_for_everyone', { target_message_id: messageId });
+        await loadMessages(false);
+        rsAuth.toast('Message deleted for everyone.', 'success');
+      } catch (e) {
+        console.error(e);
+        rsAuth.toast('Delete failed: ' + (e.message || e), 'error');
+      }
+    }
+
+    async function manualRefresh(){
+      if (selectedConversation?.id) await loadMessages(true);
+      else await loadAllowedClients();
+    }
+
+    function toggleSidebar(){
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    }
+
+    document.getElementById('messageInput').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+
+    async function init(){
+      try {
+        currentProfile = await rsAuth.requireRoles(['super_admin','coach','client']);
+        if (!currentProfile) return;
+
+        chatClient = await setupRealtimeClient();
+        await loadAllowedClients();
+      } catch (e) {
+        console.error(e);
+        showMainError('CHAT SETUP', e.message || e);
+      }
+    }
+
+    window.addEventListener('beforeunload', () => {
+      if (chatClient && realtimeChannel) chatClient.removeChannel(realtimeChannel);
+    });
+
+    init();
+  </script>
+</body>
+</html>
