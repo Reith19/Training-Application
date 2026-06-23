@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
 if (window.RS_CHAT_WIDGET_LOADED) return;
 window.RS_CHAT_WIDGET_LOADED = true;
 
@@ -26,16 +26,16 @@ lastError: ''
 };
 
 function esc(value) {
-return String(value ?? '').replace(/[&<>'"]/g, c => ({
-'&': '&',
-'<': '<',
-'>': '>',
-"'": ''',
-'"': '"'
-}[c]));
+  return String(value ?? '').replace(/[&<>'"]/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[c] || c));
 }
 
-function pack(value) {
+  function pack(value) {
 return encodeURIComponent(String(value || ''));
 }
 
@@ -73,14 +73,12 @@ function loadScript(src) {
 return new Promise((resolve, reject) => {
 if (scriptLoaded(src)) return resolve();
 
-```
   const script = document.createElement('script');
   script.src = src;
   script.onload = () => resolve();
   script.onerror = () => reject(new Error(`Failed to load ${src}`));
   document.head.appendChild(script);
 });
-```
 
 }
 
@@ -89,11 +87,9 @@ if (!window.rsAuth) {
 await loadScript('app-auth.js');
 }
 
-```
 if (!window.supabase) {
   await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
 }
-```
 
 }
 
@@ -104,7 +100,6 @@ return `       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 
 function injectStyles() {
 if (document.getElementById('rs-chat-widget-style')) return;
 
-```
 const style = document.createElement('style');
 style.id = 'rs-chat-widget-style';
 style.textContent = `
@@ -206,14 +201,12 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
-```
 
 }
 
 function buildShell() {
 if (document.getElementById('rs-chat-fab')) return;
 
-```
 injectStyles();
 
 const fab = document.createElement('button');
@@ -236,7 +229,7 @@ drawer.innerHTML = `
       <div class="rs-chat-title">LIVE <span>CHAT</span></div>
       <div class="rs-chat-sub" id="rs-chat-sub">Coach-client messaging available anywhere in the app.</div>
     </div>
-    <button class="rs-chat-close" type="button" id="rs-chat-close" aria-label="Close chat">×</button>
+    <button class="rs-chat-close" type="button" id="rs-chat-close" aria-label="Close chat">Ã—</button>
   </div>
   <div class="rs-chat-notice" id="rs-chat-notice">Loading secure chat...</div>
   <div class="rs-chat-list" id="rs-chat-list"></div>
@@ -259,7 +252,6 @@ document.getElementById('rs-chat-input').addEventListener('keydown', event => {
     sendMessage();
   }
 });
-```
 
 }
 
@@ -305,7 +297,6 @@ function renderList() {
 const list = document.getElementById('rs-chat-list');
 if (!list) return;
 
-```
 if (state.profile?.role === 'client') {
   list.innerHTML = '';
   return;
@@ -334,7 +325,6 @@ list.innerHTML = state.allowedClients.map(client => {
 list.querySelectorAll('[data-client-id]').forEach(button => {
   button.addEventListener('click', () => openClientChat(unpack(button.getAttribute('data-client-id'))));
 });
-```
 
 }
 
@@ -342,7 +332,6 @@ function renderMessages(messages) {
 const box = document.getElementById('rs-chat-messages');
 if (!box) return;
 
-```
 if (!messages.length) {
   box.innerHTML = '<div class="rs-chat-empty">No messages yet. Start the conversation.</div>';
   return;
@@ -375,7 +364,6 @@ box.querySelectorAll('[data-delete-id]').forEach(button => {
 });
 
 box.scrollTop = box.scrollHeight;
-```
 
 }
 
@@ -387,7 +375,6 @@ state.coaches = rows.filter(p => p.is_active && (p.role === 'coach' || p.role ==
 async function loadAllowedClients() {
 await loadCoaches();
 
-```
 if (state.profile.role === 'client') {
   const clientId = state.profile.client_id;
   if (!clientId) throw new Error('This account is not linked to a client record yet.');
@@ -406,14 +393,12 @@ const query = state.profile.role === 'coach'
 
 const rows = await window.rsAuth.dbSelect('clients', query);
 state.allowedClients = rows.filter(client => state.profile.role === 'super_admin' ? !!client.coach_id : true);
-```
 
 }
 
 async function ensureRealtimeClient() {
 if (state.realtime) return state.realtime;
 
-```
 const session = sessionFromStorage();
 if (!session?.access_token || !window.supabase) return null;
 
@@ -436,7 +421,6 @@ if (session.refresh_token) {
 
 state.realtime = client;
 return client;
-```
 
 }
 
@@ -444,7 +428,6 @@ async function bootChat() {
 if (state.booted || state.loading) return;
 state.loading = true;
 
-```
 try {
   await ensureDependencies();
   state.profile = await window.rsAuth.getCurrentProfile();
@@ -477,7 +460,6 @@ try {
 } finally {
   state.loading = false;
 }
-```
 
 }
 
@@ -485,7 +467,6 @@ async function openClientChat(clientId) {
 const client = state.allowedClients.find(item => String(item.id) === String(clientId));
 if (!client) return;
 
-```
 state.selectedClient = client;
 state.conversation = null;
 state.senderProfiles = {};
@@ -494,7 +475,7 @@ renderList();
 const isClient = state.profile?.role === 'client';
 const title = isClient ? coachName(client.coach_id) : (client.name || 'Client');
 const sub = isClient ? 'Your assigned coach' : (client.coach_id ? `Coach: ${coachName(client.coach_id)}` : 'No coach assigned');
-setNotice(`${title} · ${sub}`, false);
+setNotice(`${title} Â· ${sub}`, false);
 document.getElementById('rs-chat-messages').innerHTML = '<div class="rs-chat-empty">Opening secure chat...</div>';
 document.getElementById('rs-chat-input').disabled = true;
 document.getElementById('rs-chat-send').disabled = true;
@@ -513,14 +494,12 @@ try {
   setNotice(error.message || 'Could not open chat.', true);
   document.getElementById('rs-chat-messages').innerHTML = '<div class="rs-chat-empty">Could not open this chat.</div>';
 }
-```
 
 }
 
 async function loadMessages(scrollToBottom) {
 if (!state.conversation?.id) return;
 
-```
 const messages = await window.rsAuth.dbSelect(
   'chat_messages',
   `conversation_id=eq.${encodeURIComponent(state.conversation.id)}&select=*&order=created_at.asc`
@@ -538,7 +517,6 @@ if (scrollToBottom) {
   const box = document.getElementById('rs-chat-messages');
   if (box) box.scrollTop = box.scrollHeight;
 }
-```
 
 }
 
@@ -546,7 +524,6 @@ async function subscribeToConversation() {
 const client = await ensureRealtimeClient();
 if (!client || !state.conversation?.id) return;
 
-```
 if (state.channel) {
   try { await client.removeChannel(state.channel); } catch {}
   state.channel = null;
@@ -565,7 +542,6 @@ state.channel = client
   .subscribe(status => {
     if (status === 'SUBSCRIBED') setNotice('Realtime chat connected.', false);
   });
-```
 
 }
 
@@ -574,7 +550,6 @@ const input = document.getElementById('rs-chat-input');
 const text = input?.value.trim();
 if (!text || !state.conversation?.id || !state.profile?.id) return;
 
-```
 document.getElementById('rs-chat-send').disabled = true;
 
 try {
@@ -593,7 +568,6 @@ try {
   document.getElementById('rs-chat-send').disabled = false;
   input.focus();
 }
-```
 
 }
 
@@ -601,7 +575,6 @@ async function deleteMessage(messageId) {
 if (!messageId) return;
 if (!confirm('Delete this message for both people?')) return;
 
-```
 try {
   await window.rsAuth.dbRpc('delete_chat_message_for_everyone', { target_message_id: messageId });
   await loadMessages(false);
@@ -609,7 +582,6 @@ try {
   console.error(error);
   setNotice(error.message || 'Could not delete message.', true);
 }
-```
 
 }
 
@@ -636,3 +608,4 @@ document.addEventListener('DOMContentLoaded', start);
 start();
 }
 })();
+
