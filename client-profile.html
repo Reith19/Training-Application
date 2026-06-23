@@ -118,27 +118,27 @@
       <div class="field-row">
         <div class="field-group">
           <div class="field-label">Age</div>
-          <div class="field-value" id="val-age">â€”</div>
+          <div class="field-value" id="val-age"></div>
           <input type="text" class="field-input" id="inp-age" placeholder="Age" />
         </div>
         <div class="field-group">
           <div class="field-label">Country</div>
-          <div class="field-value" id="val-country">â€”</div>
+          <div class="field-value" id="val-country"></div>
           <input type="text" class="field-input" id="inp-country" placeholder="Country" />
         </div>
         <div class="field-group">
           <div class="field-label">Enrollment Date</div>
-          <div class="field-value" id="val-enrollment-date">N/A</div>
+          <div class="field-value" id="val-enrollment-date"></div>
           <input type="date" class="field-input" id="inp-enrollment-date" />
         </div>
         <div class="field-group">
           <div class="field-label">Months Enrolled</div>
-          <div class="field-value" id="val-enrollment-months">N/A</div>
+          <div class="field-value" id="val-enrollment-months"></div>
           <input type="number" min="1" step="1" class="field-input" id="inp-enrollment-months" placeholder="Example: 3" />
         </div>
         <div class="field-group full-width">
           <div class="field-label">Status</div>
-          <div class="field-value" id="val-status">â€”</div>
+          <div class="field-value" id="val-status"></div>
           <select class="field-input" id="inp-status" style="cursor:pointer;">
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
@@ -146,7 +146,7 @@
         </div>
         <div class="field-group full-width">
           <div class="field-label">Athlete</div>
-          <div class="field-value" id="val-athlete">â€”</div>
+          <div class="field-value" id="val-athlete"></div>
           <div class="toggle-wrap field-input" id="inp-athlete" style="background:transparent;border:none;padding:4px 0;">
             <label class="toggle">
               <input type="checkbox" id="athleteToggle" onchange="updateToggleLabel()" />
@@ -162,7 +162,7 @@
       <div class="card-title">BACKGROUND</div>
       <div class="field-group">
         <div class="field-label">Training Background</div>
-        <div class="field-value muted" id="val-background">â€”</div>
+        <div class="field-value muted" id="val-background"></div>
         <textarea class="field-textarea" id="inp-background" placeholder="Enter client background..."></textarea>
       </div>
     </div>
@@ -171,7 +171,7 @@
       <div class="card-title">PHYSICAL CONDITIONS / RESTRICTIONS</div>
       <div class="field-group">
         <div class="field-label">Conditions & Restrictions</div>
-        <div class="field-value muted" id="val-conditions">â€”</div>
+        <div class="field-value muted" id="val-conditions"></div>
         <input type="text" class="field-input" id="inp-conditions" placeholder="Physical conditions or restrictions..." />
       </div>
     </div>
@@ -180,7 +180,7 @@
       <div class="card-title">OTHER COMMENTS</div>
       <div class="field-group">
         <div class="field-label">Comments</div>
-        <div class="field-value muted" id="val-comments">â€”</div>
+        <div class="field-value muted" id="val-comments"></div>
         <textarea class="field-textarea" id="inp-comments" placeholder="Other comments..."></textarea>
       </div>
     </div>
@@ -258,16 +258,16 @@
     }
 
     function formatEnrollmentDate(value) {
-      if (!value) return 'N/A';
+      if (!value) return '';
       const date = new Date(`${value}T00:00:00`);
-      if (Number.isNaN(date.getTime())) return 'N/A';
+      if (Number.isNaN(date.getTime())) return '';
       return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
     }
 
     function formatEnrollmentMonths(value) {
-      if (value === null || value === undefined || value === '') return 'N/A';
+      if (value === null || value === undefined || value === '') return '';
       const num = Number(value);
-      if (!Number.isFinite(num) || num <= 0) return 'N/A';
+      if (!Number.isFinite(num) || num <= 0) return '';
       return `${num} month${num === 1 ? '' : 's'}`;
     }
     function displayText(value) {
@@ -419,5 +419,6 @@
   <script src="chat-widget.js"></script>
 </body>
 </html>
+
 
 

@@ -31,19 +31,19 @@
   <main class="page">
     <section class="header">
       <div>
-        <a class="back" href="home.html">â† Back to Dashboard</a>
+        <a class="back" href="home.html">← Back to Dashboard</a>
         <h1 class="title">CLIENT <span>EXPIRY REPORTS</span></h1>
         <div class="subtitle">12-month calendar view based on enrollment date + months enrolled.</div>
         <div class="summary-strip" id="summaryStrip">
-          <div class="summary-card"><div class="summary-num">â€”</div><div class="summary-label">Tracked</div></div>
-          <div class="summary-card"><div class="summary-num">â€”</div><div class="summary-label">This Month</div></div>
-          <div class="summary-card"><div class="summary-num">â€”</div><div class="summary-label">Next 30 Days</div></div>
+          <div class="summary-card"><div class="summary-num"></div><div class="summary-label">Tracked</div></div>
+          <div class="summary-card"><div class="summary-num"></div><div class="summary-label">This Month</div></div>
+          <div class="summary-card"><div class="summary-num"></div><div class="summary-label">Next 30 Days</div></div>
         </div>
       </div>
       <div class="actions">
-        <button class="btn" onclick="changeYear(-1)">â† Prev Year</button>
+        <button class="btn" onclick="changeYear(-1)">← Prev Year</button>
         <div class="year-pill" id="yearPill">YEAR</div>
-        <button class="btn" onclick="changeYear(1)">Next Year â†’</button>
+        <button class="btn" onclick="changeYear(1)">Next Year →</button>
         <button class="btn-red" onclick="loadClients()">REFRESH</button>
       </div>
     </section>
@@ -57,7 +57,7 @@
 
     <section class="log-panel">
       <div class="panel-head">
-        <div><div class="panel-title">NEAREST <span>EXPIRING CLIENTS</span></div><div class="muted">Name â€” expiring in xx months â€” at expiry date.</div></div>
+        <div><div class="panel-title">NEAREST <span>EXPIRING CLIENTS</span></div><div class="muted">Name  expiring in xx months  at expiry date.</div></div>
       </div>
       <div class="log-body">
         <div id="nearestList" class="expiry-list"><div class="empty">Loading expiry log...</div></div>
@@ -233,7 +233,7 @@
         const urgent = dd >= 0 && dd <= 30;
         const expiredCls = dd < 0;
         return `<div class="expiry-row ${urgent?'urgent':''} ${expiredCls?'expired':''}" onclick="selectDate('${r.key}')">
-          <div><div class="expiry-name">${esc(r.client.name)}</div><div class="expiry-meta">${expiryText(r.expiryDate)} â€” ${r.months} month${r.months!==1?'s':''} enrolled</div></div>
+          <div><div class="expiry-name">${esc(r.client.name)}</div><div class="expiry-meta">${expiryText(r.expiryDate)}  ${r.months} month${r.months!==1?'s':''} enrolled</div></div>
           <div class="expiry-date">At ${esc(displayDate(r.expiryDate))}</div>
         </div>`;
       }).join('');
@@ -283,4 +283,5 @@
   <script src="chat-widget.js"></script>
 </body>
 </html>
+
 

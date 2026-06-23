@@ -14,7 +14,7 @@
 <body>
 <div class="topbar"><a href="home.html" class="logo-area"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a><button class="logout" onclick="rsAuth.signOut()">LOGOUT</button></div>
 <div class="page">
-  <a href="program-builder.html" class="back" onclick="event.preventDefault(); history.back();">â† Back to Program Builder</a>
+  <a href="program-builder.html" class="back" onclick="event.preventDefault(); history.back();">← Back to Program Builder</a>
   <div class="header">
     <div><h1 class="brand-title">IMPORT <span>BLOCK</span></h1><div class="subtitle">Upload one Excel sheet/block at a time. Same block name replaces the existing block; new block name appends.</div></div>
     <div class="actions"><span id="importStatus" class="import-status"></span><button id="importBtn" class="btn-red" onclick="doImport()" disabled>IMPORT BLOCK</button><button class="btn" onclick="clearFile()">CLEAR FILE</button></div>
@@ -33,7 +33,7 @@
       <div class="panel-body">
         <div id="replaceWarning" class="warning" style="display:none"></div>
         <div id="previewPanel" class="preview">
-          <div class="preview-head"><div><div class="preview-title" id="previewTitle">Block</div><div class="preview-summary" id="previewSummary">â€”</div></div><button class="btn-red" onclick="doImport()">IMPORT THIS BLOCK</button></div>
+          <div class="preview-head"><div><div class="preview-title" id="previewTitle">Block</div><div class="preview-summary" id="previewSummary"></div></div><button class="btn-red" onclick="doImport()">IMPORT THIS BLOCK</button></div>
           <div id="previewWeeks"></div>
         </div>
         <div id="noPreview" class="empty">Select a client and upload an Excel file to preview the parsed block.</div>
@@ -81,7 +81,7 @@ async function loadClients(){
   const sel=document.getElementById('clientSelect');
   sel.innerHTML='<option value="">Loading clients...</option>';
   clients=await rsAuth.dbSelect('clients','select=id,name,program_data&order=name.asc');
-  sel.innerHTML='<option value="">â€” Select a client â€”</option>'+clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+  sel.innerHTML='<option value=""> Select a client </option>'+clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
 }
 
 async function loadWorkoutRepo(){
@@ -101,7 +101,7 @@ function onClientChange(){
     document.getElementById('existingBlocks').innerHTML=prog.blocks.map(b=>{
       const weeks=b.weeks?.length||0;
       const days=(b.weeks||[]).reduce((n,w)=>n+(w.days?.length||0),0);
-      return `<div class="block-row"><div class="block-name">${esc(b.name)} <span class="badge badge-blue">${weeks}w Â· ${days}d</span></div></div>`;
+      return `<div class="block-row"><div class="block-name">${esc(b.name)} <span class="badge badge-blue">${weeks}w · ${days}d</span></div></div>`;
     }).join('');
   }
   updateImportBtn();
@@ -131,7 +131,7 @@ function isExercise(v){
   if(!s||s.length<2)return false;
   if(isDayHeader(s))return false;
   if(/^week\s*\d+/i.test(s))return false;
-  if(/^[-â€“â€”]+$/.test(s))return false;
+  if(/^[--]+$/.test(s))return false;
   if(isHeaderText(s))return false;
   return true;
 }
@@ -390,7 +390,7 @@ function handleFile(file){
       console.error(err);
       showError(err.message);
       document.getElementById('dropzone').classList.add('error-file');
-      document.getElementById('dropzoneTitle').textContent='Error â€” try again';
+      document.getElementById('dropzoneTitle').textContent='Error  try again';
       parsedBlock=null;
       document.getElementById('previewPanel').classList.remove('show');
       updateImportBtn();
@@ -430,15 +430,15 @@ function renderPreview(){
   const newExercises=allExNames.filter(n=>n&&!repoNames.has(String(n).toLowerCase()));
 
   document.getElementById('previewTitle').textContent=b.name;
-  document.getElementById('previewSummary').textContent=`${b.weeks.length} weeks Â· ${totalDays} days Â· ${totalExercises} exercises Â· ${totalSetRows} set rows`;
+  document.getElementById('previewSummary').textContent=`${b.weeks.length} weeks · ${totalDays} days · ${totalExercises} exercises · ${totalSetRows} set rows`;
   document.getElementById('previewWeeks').innerHTML=b.weeks.map(w=>{
     const dCount=w.days.length;
     const eCount=w.days.reduce((n,d)=>n+d.exercises.length,0);
     const rCount=w.days.reduce((n,d)=>n+d.exercises.reduce((x,e)=>x+(e.lines?.length||1),0),0);
-    const obj=w.objective?`<span style="color:#888;font-size:.76rem;font-weight:400"> â€” ${esc(w.objective)}</span>`:'';
-    return`<div class="block-row"><div class="block-name">${esc(w.name)}${obj}</div><div class="block-meta"><span><span class="badge badge-blue">${dCount} day${dCount!==1?'s':''}</span></span><span><span class="badge badge-green">${eCount} exercises Â· ${rCount} rows</span></span></div></div>`;
+    const obj=w.objective?`<span style="color:#888;font-size:.76rem;font-weight:400">  ${esc(w.objective)}</span>`:'';
+    return`<div class="block-row"><div class="block-name">${esc(w.name)}${obj}</div><div class="block-meta"><span><span class="badge badge-blue">${dCount} day${dCount!==1?'s':''}</span></span><span><span class="badge badge-green">${eCount} exercises · ${rCount} rows</span></span></div></div>`;
   }).join('')+
-  (newExercises.length?`<div class="warning" style="margin-top:12px"><strong>âš  ${newExercises.length} new exercise${newExercises.length!==1?'s':''} will be created in Workout Repository</strong> as Uncategorized:<br><span style="color:#fff;opacity:.75">${newExercises.map(n=>esc(n)).join(' Â· ')}</span></div>`:'')+
+  (newExercises.length?`<div class="warning" style="margin-top:12px"><strong>âš  ${newExercises.length} new exercise${newExercises.length!==1?'s':''} will be created in Workout Repository</strong> as Uncategorized:<br><span style="color:#fff;opacity:.75">${newExercises.map(n=>esc(n)).join(' · ')}</span></div>`:'')+
   (topSets?`<div style="margin-top:12px;font-size:.8rem;color:#888"><span class="badge badge-yellow" style="margin-right:6px">${topSets} top set exercise${topSets!==1?'s':''}</span>will receive "Send a video of last set" as coach comment.</div>`:'');
 
   refreshReplaceWarning();
@@ -565,4 +565,5 @@ init();
   <script src="chat-widget.js"></script>
 </body>
 </html>
+
 

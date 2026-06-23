@@ -475,7 +475,7 @@ renderList();
 const isClient = state.profile?.role === 'client';
 const title = isClient ? coachName(client.coach_id) : (client.name || 'Client');
 const sub = isClient ? 'Your assigned coach' : (client.coach_id ? `Coach: ${coachName(client.coach_id)}` : 'No coach assigned');
-setNotice(`${title} Â· ${sub}`, false);
+setNotice(`${title} · ${sub}`, false);
 document.getElementById('rs-chat-messages').innerHTML = '<div class="rs-chat-empty">Opening secure chat...</div>';
 document.getElementById('rs-chat-input').disabled = true;
 document.getElementById('rs-chat-send').disabled = true;
@@ -608,4 +608,5 @@ document.addEventListener('DOMContentLoaded', start);
 start();
 }
 })();
+
 
