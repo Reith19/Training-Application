@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RS Fitness | Reports</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    *{box-sizing:border-box}
+    body{margin:0;background:#111;color:#fff;font-family:Inter,sans-serif;min-height:100vh;overflow:hidden}
+    .topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:14px 30px;background:rgba(9,9,9,.98);border-bottom:1px solid rgba(139,0,0,.35);position:sticky;top:0;z-index:50}
+    .logo-area{display:flex;align-items:center;gap:12px;text-decoration:none}.logo-area img{width:44px;height:44px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 8px rgba(139,0,0,.7))}.logo-area span,.title,.panel-title,.month-name{font-family:'Bebas Neue',sans-serif;letter-spacing:3px}.logo-area span{font-size:1.65rem;color:#fff}
+    .logout,.btn,.btn-red{font-family:Inter,sans-serif;border-radius:9px;letter-spacing:1px;font-weight:800;cursor:pointer;white-space:nowrap}.logout{background:rgba(139,0,0,.2);border:1px solid rgba(139,0,0,.45);color:#ff6b6b;padding:9px 18px;font-size:.78rem}.btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#eee;padding:10px 14px;font-size:.76rem}.btn-red{background:linear-gradient(135deg,#8B0000,#cc0000);border:0;color:#fff;padding:11px 16px;font-size:.76rem}.btn:hover,.btn-red:hover,.logout:hover{transform:translateY(-1px)}
+    .page{height:calc(100vh - 74px);padding:22px 28px 24px;max-width:1700px;margin:0 auto;display:grid;grid-template-rows:auto minmax(0,3fr) minmax(190px,1fr);gap:16px;overflow:hidden}
+    .header{display:flex;justify-content:space-between;align-items:flex-end;gap:14px}.back{color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:1.4px;font-size:.78rem}.back:hover{color:#cc0000}.title{font-size:2.35rem;line-height:1;margin:10px 0 6px}.title span,.panel-title span,.month-name span{color:#cc0000}.subtitle{color:#888;line-height:1.5;font-size:.88rem;letter-spacing:.6px}.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.year-pill{border:1px solid rgba(204,0,0,.35);background:rgba(139,0,0,.12);border-radius:999px;padding:8px 14px;color:#fff;font-weight:900;letter-spacing:1px}
+    .summary-strip{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.summary-card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 12px;min-width:115px}.summary-num{font-size:1.25rem;font-weight:900}.summary-label{font-size:.66rem;color:#888;text-transform:uppercase;letter-spacing:1.5px;font-weight:900}
+    .calendar-wrap{min-height:0;background:#171717;border:1px solid rgba(139,0,0,.28);border-radius:17px;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}.panel-head{padding:14px 18px;background:rgba(139,0,0,.12);border-bottom:1px solid rgba(139,0,0,.22);display:flex;justify-content:space-between;align-items:center;gap:12px}.panel-title{font-size:1.45rem}.muted{color:#888;font-size:.82rem;line-height:1.5}.calendar-grid{min-height:0;overflow:auto;padding:14px;display:grid;grid-template-columns:repeat(4,minmax(250px,1fr));gap:12px}.month-card{background:#101010;border:1px solid rgba(255,255,255,.08);border-radius:14px;overflow:hidden;min-height:230px}.month-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.035)}.month-name{font-size:1.25rem}.month-count{font-size:.7rem;color:#ff6b6b;font-weight:900;letter-spacing:1px}.weekdays,.days{display:grid;grid-template-columns:repeat(7,1fr)}.weekdays div{padding:8px 3px;text-align:center;color:#777;font-size:.62rem;text-transform:uppercase;font-weight:900;letter-spacing:1px}.day{min-height:30px;margin:2px;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative;color:#aaa;font-size:.75rem;cursor:default;border:1px solid transparent}.day.blank{opacity:.15}.day.today{border-color:rgba(255,255,255,.24);color:#fff}.day.expiring{background:rgba(204,0,0,.22);border-color:rgba(255,0,0,.55);color:#fff;cursor:pointer;font-weight:900}.day.expiring:hover{background:rgba(204,0,0,.38)}.day .dot{position:absolute;right:4px;top:3px;background:#ff3333;border-radius:999px;font-size:.55rem;min-width:14px;height:14px;display:flex;align-items:center;justify-content:center;color:#fff;line-height:1;font-weight:900}.day.selected{outline:2px solid #ffcc66;outline-offset:-2px}
+    .log-panel{min-height:0;background:#171717;border:1px solid rgba(139,0,0,.28);border-radius:17px;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}.log-body{overflow:auto;padding:14px 18px;display:grid;grid-template-columns:1.1fr .9fr;gap:14px}.expiry-list{display:grid;gap:8px}.expiry-row{background:#101010;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 13px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.expiry-row.urgent{border-color:rgba(204,0,0,.5);background:rgba(139,0,0,.16)}.expiry-row.expired{border-color:rgba(255,204,102,.38);background:rgba(255,204,102,.06)}.expiry-name{font-weight:900;color:#fff}.expiry-meta{font-size:.82rem;color:#aaa;margin-top:4px}.expiry-date{font-weight:900;color:#ff6b6b;white-space:nowrap;font-size:.85rem}.empty{border:1px dashed rgba(255,255,255,.13);border-radius:14px;padding:24px;color:#777;text-align:center;background:rgba(255,255,255,.02)}.selected-box{background:#101010;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:14px;min-height:100%}.selected-title{font-weight:900;margin-bottom:10px}.client-chip{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}.client-chip:last-child{border-bottom:0}.toast{position:fixed;right:24px;bottom:24px;background:#1a1a1a;border:1px solid rgba(139,0,0,.4);color:white;padding:12px 20px;border-radius:10px;font-size:.85rem;z-index:999;opacity:0;transform:translateY(10px);transition:.3s}.toast.show{opacity:1;transform:translateY(0)}.toast.error{border-color:#cc0000;color:#ff6b6b}.toast.success{border-color:#00c864;color:#00c864}
+    @media(max-width:1200px){body{overflow:auto}.page{height:auto;overflow:visible;grid-template-rows:auto auto auto}.calendar-grid{grid-template-columns:repeat(3,minmax(230px,1fr));max-height:none}.log-body{grid-template-columns:1fr}}
+    @media(max-width:860px){.calendar-grid{grid-template-columns:repeat(2,minmax(210px,1fr))}.header{align-items:flex-start;flex-direction:column}.topbar{padding:12px 18px}.page{padding:18px}}
+    @media(max-width:560px){.calendar-grid{grid-template-columns:1fr}.actions{width:100%}.btn,.btn-red{flex:1}.summary-card{flex:1}.expiry-row{grid-template-columns:1fr}.expiry-date{white-space:normal}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="home.html" class="logo-area"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a>
+    <button class="logout" onclick="logout()">LOGOUT</button>
+  </div>
+
+  <main class="page">
+    <section class="header">
+      <div>
+        <a class="back" href="home.html">← Back to Dashboard</a>
+        <h1 class="title">CLIENT <span>EXPIRY REPORTS</span></h1>
+        <div class="subtitle">12-month calendar view based on enrollment date + months enrolled.</div>
+        <div class="summary-strip" id="summaryStrip">
+          <div class="summary-card"><div class="summary-num">—</div><div class="summary-label">Tracked</div></div>
+          <div class="summary-card"><div class="summary-num">—</div><div class="summary-label">This Month</div></div>
+          <div class="summary-card"><div class="summary-num">—</div><div class="summary-label">Next 30 Days</div></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" onclick="changeYear(-1)">← Prev Year</button>
+        <div class="year-pill" id="yearPill">YEAR</div>
+        <button class="btn" onclick="changeYear(1)">Next Year →</button>
+        <button class="btn-red" onclick="loadClients()">REFRESH</button>
+      </div>
+    </section>
+
+    <section class="calendar-wrap">
+      <div class="panel-head">
+        <div><div class="panel-title">12 MONTH <span>CALENDAR</span></div><div class="muted">Red dates mean at least one client expires on that date.</div></div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid"><div class="empty">Loading calendar...</div></div>
+    </section>
+
+    <section class="log-panel">
+      <div class="panel-head">
+        <div><div class="panel-title">NEAREST <span>EXPIRING CLIENTS</span></div><div class="muted">Name — expiring in xx months — at expiry date.</div></div>
+      </div>
+      <div class="log-body">
+        <div id="nearestList" class="expiry-list"><div class="empty">Loading expiry log...</div></div>
+        <div class="selected-box" id="selectedDateBox"><div class="selected-title">Selected Date</div><div class="muted">Click a red date to see who expires that day.</div></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+  <script src="app-auth.js"></script>
+  <script>
+    const SUPABASE_URL = 'https://usmeoqyzlnxnoighhiga.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_r5uttSQDB3twbwYYN5-EMg_57_GPPXO';
+    const DIRECT_HEADERS = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const weekNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let currentYear = new Date().getFullYear();
+    let clients = [];
+    let expiryRows = [];
+    let selectedDateKey = '';
+
+    function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+    function pad(n){return String(n).padStart(2,'0')}
+    function dateKey(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+    function displayDate(d){return d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'})}
+    function parseDate(value){
+      if(!value)return null;
+      const parts = String(value).split('-').map(Number);
+      if(parts.length !== 3 || parts.some(Number.isNaN))return null;
+      return new Date(parts[0], parts[1]-1, parts[2]);
+    }
+    function addMonthsClamped(date, months){
+      const y = date.getFullYear();
+      const m = date.getMonth() + Number(months || 0);
+      const d = date.getDate();
+      const targetYear = y + Math.floor(m / 12);
+      const targetMonth = ((m % 12) + 12) % 12;
+      const lastDay = new Date(targetYear, targetMonth + 1, 0).getDate();
+      return new Date(targetYear, targetMonth, Math.min(d, lastDay));
+    }
+    function monthDiffApprox(from, to){
+      let months = (to.getFullYear()-from.getFullYear())*12 + (to.getMonth()-from.getMonth());
+      if(to.getDate() < from.getDate())months--;
+      return months;
+    }
+    function daysDiff(from, to){
+      const a = new Date(from.getFullYear(),from.getMonth(),from.getDate()).getTime();
+      const b = new Date(to.getFullYear(),to.getMonth(),to.getDate()).getTime();
+      return Math.round((b-a)/86400000);
+    }
+    function expiryText(expiryDate){
+      const today = new Date();
+      const dd = daysDiff(today, expiryDate);
+      if(dd < 0)return `expired ${Math.abs(dd)} day${Math.abs(dd)!==1?'s':''} ago`;
+      if(dd === 0)return 'expires today';
+      const mm = monthDiffApprox(today, expiryDate);
+      if(mm >= 1)return `expiring in ${mm} month${mm!==1?'s':''}`;
+      return `expiring in ${dd} day${dd!==1?'s':''}`;
+    }
+
+    async function getClientRows(){
+      const query = 'select=id,name,status,enrollment_date,enrollment_months&order=name.asc';
+      if(window.rsAuth && rsAuth.requireRoles && rsAuth.dbSelect){
+        await rsAuth.requireRoles(['super_admin','coach']);
+        return await rsAuth.dbSelect('clients', query);
+      }
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/clients?${query}`, {headers:DIRECT_HEADERS});
+      const data = await res.json().catch(()=>[]);
+      if(!res.ok)throw new Error(data.message || JSON.stringify(data));
+      return Array.isArray(data) ? data : [];
+    }
+
+    async function loadClients(){
+      try{
+        document.getElementById('calendarGrid').innerHTML = '<div class="empty">Loading calendar...</div>';
+        document.getElementById('nearestList').innerHTML = '<div class="empty">Loading expiry log...</div>';
+        clients = await getClientRows();
+        buildExpiryRows();
+        renderAll();
+      }catch(e){
+        console.error(e);
+        document.getElementById('calendarGrid').innerHTML = `<div class="empty">Error loading reports: ${esc(e.message || e)}</div>`;
+        document.getElementById('nearestList').innerHTML = `<div class="empty">Could not load clients.</div>`;
+        showToast('Error loading client expiry report.', 'error');
+      }
+    }
+
+    function buildExpiryRows(){
+      expiryRows = clients.map(c=>{
+        const start = parseDate(c.enrollment_date);
+        const months = Number(c.enrollment_months);
+        if(!start || !Number.isFinite(months) || months <= 0)return null;
+        const expiryDate = addMonthsClamped(start, months);
+        return {client:c, start, months, expiryDate, key:dateKey(expiryDate)};
+      }).filter(Boolean).sort((a,b)=>a.expiryDate-b.expiryDate);
+    }
+
+    function rowsByDate(){
+      const map = new Map();
+      expiryRows.forEach(r=>{
+        if(!map.has(r.key))map.set(r.key, []);
+        map.get(r.key).push(r);
+      });
+      return map;
+    }
+
+    function renderAll(){
+      document.getElementById('yearPill').textContent = currentYear;
+      renderSummary();
+      renderCalendar();
+      renderNearestList();
+      renderSelectedDate();
+    }
+
+    function renderSummary(){
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYearNow = today.getFullYear();
+      const thisMonth = expiryRows.filter(r=>r.expiryDate.getFullYear()===currentYearNow && r.expiryDate.getMonth()===currentMonth).length;
+      const next30 = expiryRows.filter(r=>{const d=daysDiff(today,r.expiryDate);return d>=0&&d<=30}).length;
+      document.getElementById('summaryStrip').innerHTML = `
+        <div class="summary-card"><div class="summary-num">${expiryRows.length}</div><div class="summary-label">Tracked</div></div>
+        <div class="summary-card"><div class="summary-num">${thisMonth}</div><div class="summary-label">This Month</div></div>
+        <div class="summary-card"><div class="summary-num">${next30}</div><div class="summary-label">Next 30 Days</div></div>
+      `;
+    }
+
+    function renderCalendar(){
+      const map = rowsByDate();
+      const todayKey = dateKey(new Date());
+      let html = '';
+      for(let m=0;m<12;m++){
+        const first = new Date(currentYear, m, 1);
+        const daysInMonth = new Date(currentYear, m+1, 0).getDate();
+        const startDay = first.getDay();
+        const monthCount = expiryRows.filter(r=>r.expiryDate.getFullYear()===currentYear && r.expiryDate.getMonth()===m).length;
+        let dayHtml = '';
+        for(let i=0;i<startDay;i++)dayHtml += '<div class="day blank"></div>';
+        for(let d=1;d<=daysInMonth;d++){
+          const dt = new Date(currentYear, m, d);
+          const key = dateKey(dt);
+          const rows = map.get(key) || [];
+          const cls = ['day'];
+          if(key===todayKey)cls.push('today');
+          if(rows.length)cls.push('expiring');
+          if(key===selectedDateKey)cls.push('selected');
+          const click = rows.length ? `onclick="selectDate('${key}')" title="${rows.length} client${rows.length!==1?'s':''} expiring"` : '';
+          dayHtml += `<div class="${cls.join(' ')}" ${click}>${d}${rows.length?`<span class="dot">${rows.length}</span>`:''}</div>`;
+        }
+        html += `
+          <div class="month-card">
+            <div class="month-head"><div class="month-name">${monthNames[m]}</div><div class="month-count">${monthCount?monthCount+' EXPIRING':''}</div></div>
+            <div class="weekdays">${weekNames.map(w=>`<div>${w}</div>`).join('')}</div>
+            <div class="days">${dayHtml}</div>
+          </div>
+        `;
+      }
+      document.getElementById('calendarGrid').innerHTML = html;
+    }
+
+    function renderNearestList(){
+      const today = new Date();
+      const upcoming = expiryRows.filter(r=>daysDiff(today,r.expiryDate)>=0).slice(0,12);
+      const expired = expiryRows.filter(r=>daysDiff(today,r.expiryDate)<0).slice(-5).reverse();
+      const rows = upcoming.length ? upcoming : expired;
+      if(!rows.length){
+        document.getElementById('nearestList').innerHTML = '<div class="empty">No clients have enrollment date + months enrolled yet.</div>';
+        return;
+      }
+      document.getElementById('nearestList').innerHTML = rows.map(r=>{
+        const dd = daysDiff(today, r.expiryDate);
+        const urgent = dd >= 0 && dd <= 30;
+        const expiredCls = dd < 0;
+        return `<div class="expiry-row ${urgent?'urgent':''} ${expiredCls?'expired':''}" onclick="selectDate('${r.key}')">
+          <div><div class="expiry-name">${esc(r.client.name)}</div><div class="expiry-meta">${expiryText(r.expiryDate)} — ${r.months} month${r.months!==1?'s':''} enrolled</div></div>
+          <div class="expiry-date">At ${esc(displayDate(r.expiryDate))}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderSelectedDate(){
+      const box = document.getElementById('selectedDateBox');
+      if(!selectedDateKey){
+        box.innerHTML = '<div class="selected-title">Selected Date</div><div class="muted">Click a red date to see who expires that day.</div>';
+        return;
+      }
+      const map = rowsByDate();
+      const rows = map.get(selectedDateKey) || [];
+      const d = parseDate(selectedDateKey);
+      if(!rows.length){
+        box.innerHTML = `<div class="selected-title">${esc(displayDate(d))}</div><div class="muted">No expiring clients on this date.</div>`;
+        return;
+      }
+      box.innerHTML = `<div class="selected-title">${esc(displayDate(d))}</div>${rows.map(r=>`<div class="client-chip"><div><strong>${esc(r.client.name)}</strong><div class="muted">${expiryText(r.expiryDate)}</div></div><div class="expiry-date">${esc(r.client.status || '')}</div></div>`).join('')}`;
+    }
+
+    function selectDate(key){
+      selectedDateKey = key;
+      renderCalendar();
+      renderSelectedDate();
+    }
+
+    function changeYear(delta){
+      currentYear += delta;
+      renderAll();
+    }
+
+    function showToast(message,type='success'){
+      const toast=document.getElementById('toast');
+      toast.textContent=message;
+      toast.className=`toast ${type} show`;
+      setTimeout(()=>{toast.className='toast'},3200);
+    }
+
+    function logout(){
+      if(window.rsAuth && rsAuth.signOut)rsAuth.signOut();
+      else window.location.href='index.html';
+    }
+
+    loadClients();
+  </script>
+</body>
+</html>

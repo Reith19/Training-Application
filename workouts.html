@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RS Fitness | Workout Repository</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+    body { font-family: 'Inter', sans-serif; margin: 0; background: #111111; min-height: 100vh; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid rgba(139,0,0,0.3); background: rgba(10,10,10,0.98); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+    .logo-area { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; }
+    .logo-area img { width: 42px; height: 42px; object-fit: contain; border-radius: 50%; filter: drop-shadow(0 0 8px rgba(139,0,0,0.6)); transition: filter 0.3s; }
+    .logo-area:hover img { filter: drop-shadow(0 0 14px rgba(204,0,0,0.9)); }
+    .logo-area span { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: white; letter-spacing: 3px; }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+    .chat-btn { position: relative; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s; color: white; }
+    .chat-btn:hover { background: rgba(139,0,0,0.3); border-color: #8B0000; }
+    .chat-badge { position: absolute; top: -4px; right: -4px; background: #cc0000; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    .logout-btn { background: rgba(139,0,0,0.2); border: 1px solid rgba(139,0,0,0.4); color: #ff6b6b; padding: 8px 18px; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.3s; font-family: 'Inter', sans-serif; letter-spacing: 1px; }
+    .logout-btn:hover { background: rgba(139,0,0,0.5); border-color: #cc0000; color: white; }
+    .page-content { padding: 32px; max-width: 1200px; margin: 0 auto; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .page-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: white; letter-spacing: 3px; }
+    .page-title span { color: #cc0000; }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #555; width: 16px; height: 16px; }
+    .search-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 9px 14px 9px 36px; color: white; font-size: 0.85rem; font-family: 'Inter', sans-serif; transition: all 0.3s; width: 220px; }
+    .search-input:focus { border-color: #8B0000; box-shadow: 0 0 0 3px rgba(139,0,0,0.2); outline: none; }
+    .search-input::placeholder { color: #555; }
+    .add-btn { background: linear-gradient(135deg, #8B0000, #cc0000); color: white; border: none; padding: 9px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+    .add-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(139,0,0,0.4); }
+    .table-wrap { background: #1a1a1a; border: 1px solid rgba(139,0,0,0.2); border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: rgba(139,0,0,0.15); border-bottom: 1px solid rgba(139,0,0,0.3); }
+    th { padding: 14px 20px; text-align: left; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; color: #888; font-weight: 600; }
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.2s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+    td { padding: 14px 20px; font-size: 0.88rem; color: #aaa; vertical-align: middle; }
+    .workout-name { color: white; font-weight: 600; }
+    .category-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; background: rgba(139,0,0,0.15); color: #cc0000; border: 1px solid rgba(139,0,0,0.3); }
+    .watch-link { color: #cc0000; font-size: 0.78rem; font-weight: 600; text-decoration: none; letter-spacing: 1px; transition: color 0.2s; }
+    .watch-link:hover { color: #ff3333; }
+    .btn-delete { background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #555; padding: 5px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s; }
+    .btn-delete:hover { background: rgba(255,0,0,0.1); border-color: #cc0000; color: #ff6b6b; }
+    .loading-row td { text-align: center; padding: 60px 20px; color: #555; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #1a1a1a; border: 1px solid rgba(139,0,0,0.4); border-radius: 20px; padding: 32px; width: 100%; max-width: 480px; margin: 16px; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: white; letter-spacing: 2px; margin-bottom: 24px; }
+    .modal-title span { color: #cc0000; }
+    .form-group { margin-bottom: 16px; }
+    .form-label { color: #888; font-size: 0.72rem; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 7px; }
+    .form-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: white; font-size: 0.88rem; font-family: 'Inter', sans-serif; transition: all 0.3s; box-sizing: border-box; }
+    .form-input:focus { border-color: #8B0000; box-shadow: 0 0 0 3px rgba(139,0,0,0.2); outline: none; }
+    textarea.form-input { resize: vertical; min-height: 80px; }
+    .form-select { width: 100%; background: #222; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 10px 14px; color: white; font-size: 0.88rem; font-family: 'Inter', sans-serif; transition: all 0.3s; box-sizing: border-box; cursor: pointer; }
+    .form-select:focus { border-color: #8B0000; outline: none; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+    .btn-save { flex: 1; background: linear-gradient(135deg, #8B0000, #cc0000); color: white; border: none; padding: 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: all 0.3s; }
+    .btn-save:hover { box-shadow: 0 8px 25px rgba(139,0,0,0.4); }
+    .btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-cancel { flex: 1; background: rgba(255,255,255,0.05); color: #888; border: 1px solid rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; transition: all 0.3s; }
+    .btn-cancel:hover { background: rgba(255,255,255,0.08); color: white; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #1a1a1a; border: 1px solid rgba(139,0,0,0.4); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; z-index: 999; opacity: 0; transform: translateY(10px); transition: all 0.3s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.success { border-color: #00c864; color: #00c864; }
+    .toast.error { border-color: #cc0000; color: #ff6b6b; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="home.html" class="logo-area">
+      <img src="logo.jpg" alt="RS Fitness" />
+      <span>RS FITNESS</span>
+    </a>
+    <div class="top-actions">
+      <div class="chat-btn" title="Messages">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+        </svg>
+        <div class="chat-badge">3</div>
+      </div>
+      <button class="logout-btn" onclick="window.location.href='index.html'">LOGOUT</button>
+    </div>
+  </div>
+
+  <div class="page-content">
+    <div class="page-header">
+      <div class="page-title">WORKOUT <span>REPOSITORY</span></div>
+      <div class="header-actions">
+        <div class="search-wrap">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          </svg>
+          <input type="text" class="search-input" placeholder="Search workouts..." oninput="searchWorkouts()" id="searchInput" />
+        </div>
+        <button class="add-btn" onclick="openModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" width="16" height="16">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          ADD WORKOUT
+        </button>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Workout Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Video</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="workoutTableBody">
+          <tr class="loading-row"><td colspan="5">Loading workouts...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-title">ADD <span>WORKOUT</span></div>
+      <div class="form-group">
+        <label class="form-label">Workout Name</label>
+        <input type="text" class="form-input" id="workoutName" placeholder="e.g. Barbell Bench Press" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="workoutCategory">
+          <option value="">Select category...</option>
+          <option value="Chest">Chest</option>
+          <option value="Back">Back</option>
+          <option value="Shoulders">Shoulders</option>
+          <option value="Arms">Arms</option>
+          <option value="Legs">Legs</option>
+          <option value="Core">Core</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea class="form-input" id="workoutDesc" placeholder="Describe the exercise, form cues, muscles targeted..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">YouTube URL</label>
+        <input type="text" class="form-input" id="workoutUrl" placeholder="https://www.youtube.com/watch?v=..." />
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+        <button class="btn-save" id="saveBtn" onclick="addWorkout()">ADD WORKOUT</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://usmeoqyzlnxnoighhiga.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_r5uttSQDB3twbwYYN5-EMg_57_GPPXO';
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`
+    };
+
+    async function dbSelect(table, params = '') {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, { headers });
+      return res.json();
+    }
+
+    async function dbInsert(table, data) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: { ...headers, 'Prefer': 'return=representation' },
+        body: JSON.stringify(data)
+      });
+      return { ok: res.ok, data: await res.json() };
+    }
+
+    async function dbDelete(table, id) {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?id=eq.${id}`, {
+        method: 'DELETE',
+        headers
+      });
+      return res.ok;
+    }
+
+    let allWorkouts = [];
+
+    async function loadWorkouts() {
+      try {
+        const data = await dbSelect('workouts', 'order=created_at.desc');
+        allWorkouts = Array.isArray(data) ? data : [];
+        renderTable(allWorkouts);
+      } catch(e) {
+        showToast('Error loading workouts.', 'error');
+      }
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('workoutTableBody');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="5">No workouts yet. Click Add Workout to get started.</td></tr>';
+        return;
+      }
+
+      data.forEach(w => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="workout-name">${w.name}</span></td>
+          <td><span class="category-badge">${w.category || '—'}</span></td>
+          <td style="max-width:300px;color:#777;font-size:0.82rem;">${w.description || '—'}</td>
+          <td>${w.youtube_url
+            ? `<a href="${w.youtube_url}" target="_blank" class="watch-link">▶ WATCH</a>`
+            : '<span style="color:#444;">No link</span>'
+          }</td>
+          <td><button class="btn-delete" onclick="deleteWorkout('${w.id}')">DELETE</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function searchWorkouts() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allWorkouts.filter(w =>
+        w.name.toLowerCase().includes(query) ||
+        (w.category && w.category.toLowerCase().includes(query))
+      );
+      renderTable(filtered);
+    }
+
+    function openModal() {
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+      document.getElementById('workoutName').value = '';
+      document.getElementById('workoutCategory').value = '';
+      document.getElementById('workoutDesc').value = '';
+      document.getElementById('workoutUrl').value = '';
+    }
+
+    async function addWorkout() {
+      const name = document.getElementById('workoutName').value.trim();
+      const category = document.getElementById('workoutCategory').value;
+      const description = document.getElementById('workoutDesc').value.trim();
+      const youtube_url = document.getElementById('workoutUrl').value.trim();
+
+      if (!name) { showToast('Please enter a workout name.', 'error'); return; }
+      if (!category) { showToast('Please select a category.', 'error'); return; }
+
+      const btn = document.getElementById('saveBtn');
+      btn.disabled = true;
+      btn.textContent = 'SAVING...';
+
+      const { ok } = await dbInsert('workouts', { name, category, description, youtube_url });
+
+      if (ok) {
+        showToast('Workout added!', 'success');
+        closeModal();
+        loadWorkouts();
+      } else {
+        showToast('Error adding workout.', 'error');
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'ADD WORKOUT';
+    }
+
+    async function deleteWorkout(id) {
+      if (!confirm('Delete this workout?')) return;
+      const ok = await dbDelete('workouts', id);
+      if (ok) {
+        showToast('Workout deleted.', 'success');
+        loadWorkouts();
+      } else {
+        showToast('Error deleting workout.', 'error');
+      }
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast ${type} show`;
+      setTimeout(() => { toast.className = 'toast'; }, 3000);
+    }
+
+    loadWorkouts();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RS Fitness | Import Program</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box}body{margin:0;background:#111;color:#fff;font-family:Inter,sans-serif;min-height:100vh}.topbar{height:74px;display:flex;align-items:center;justify-content:space-between;padding:14px 30px;background:#090909;border-bottom:1px solid rgba(139,0,0,.35);position:sticky;top:0;z-index:50}.logo-area{display:flex;align-items:center;gap:12px;text-decoration:none}.logo-area img{width:44px;height:44px;border-radius:50%;object-fit:contain;filter:drop-shadow(0 0 8px rgba(139,0,0,.7))}.logo-area span,.brand-title,.panel-title,.step-title{font-family:'Bebas Neue',sans-serif;letter-spacing:3px}.logo-area span{font-size:1.65rem;color:#fff}.logout,.btn,.btn-red,.btn-danger{font-family:Inter,sans-serif;border-radius:9px;letter-spacing:1px;font-weight:800;cursor:pointer;white-space:nowrap}.logout{background:rgba(139,0,0,.2);border:1px solid rgba(139,0,0,.45);color:#ff6b6b;padding:9px 18px;font-size:.78rem}.btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#eee;padding:10px 14px;font-size:.76rem}.btn-red{background:linear-gradient(135deg,#8B0000,#cc0000);border:0;color:#fff;padding:12px 18px;font-size:.78rem}.btn-red:disabled,.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.btn-danger{background:transparent;border:1px solid rgba(204,0,0,.45);color:#ff6b6b;padding:10px 14px;font-size:.74rem}.btn:hover,.btn-red:hover,.btn-danger:hover,.logout:hover{transform:translateY(-1px)}.page{max-width:1450px;margin:0 auto;padding:24px 28px 48px}.back{display:inline-flex;color:#777;text-decoration:none;text-transform:uppercase;letter-spacing:1.4px;font-size:.78rem;margin-bottom:18px}.back:hover{color:#cc0000}.header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:18px}.brand-title{font-size:2.35rem;line-height:1;margin:0}.brand-title span,.panel-title span,.step-title span{color:#cc0000}.subtitle{color:#888;font-size:.86rem;margin-top:8px;letter-spacing:1px;line-height:1.55}.actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.layout{display:grid;grid-template-columns:390px minmax(0,1fr);gap:20px;align-items:start}.panel{background:#171717;border:1px solid rgba(139,0,0,.28);border-radius:17px;overflow:hidden}.panel-head{padding:16px 18px;border-bottom:1px solid rgba(139,0,0,.22);background:rgba(139,0,0,.12);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.panel-body{padding:18px}.panel-title{font-size:1.55rem}.step-title{font-size:1.32rem;margin-bottom:8px}.muted{color:#888;font-size:.82rem;line-height:1.55}.label{color:#777;font-size:.68rem;text-transform:uppercase;letter-spacing:2px;font-weight:900;margin-bottom:7px}.input,.select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;color:#fff;padding:11px 13px;font-family:Inter,sans-serif;font-size:.88rem;outline:none}.select option{background:#1b1b1b;color:#fff}.input:focus,.select:focus{border-color:#8B0000;box-shadow:0 0 0 3px rgba(139,0,0,.18)}.step{border:1px solid rgba(255,255,255,.08);background:#101010;border-radius:15px;padding:16px;margin-bottom:14px}.dropzone{border:1.5px dashed rgba(255,255,255,.18);background:rgba(255,255,255,.025);border-radius:16px;padding:32px 20px;text-align:center;cursor:pointer;transition:.22s;min-height:160px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px}.dropzone:hover,.dropzone.drag{border-color:#cc0000;background:rgba(139,0,0,.12)}.dropzone.has-file{border-color:rgba(0,200,100,.55);background:rgba(0,200,100,.08)}.dropzone.error-file{border-color:#cc0000;background:rgba(204,0,0,.08)}.drop-title{font-weight:900;font-size:1rem}.drop-sub{color:#888;font-size:.8rem;line-height:1.45}.warning{border:1px solid rgba(255,204,102,.25);background:rgba(255,204,102,.08);color:#ffcc66;border-radius:12px;padding:12px 14px;font-size:.82rem;line-height:1.45;margin-top:12px}.file-error{display:none;border:1px solid rgba(204,0,0,.35);background:rgba(204,0,0,.08);color:#ff6b6b;border-radius:12px;padding:12px 14px;font-size:.82rem;line-height:1.45;margin-top:12px}.block-row{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);border-radius:12px;padding:12px 13px;margin-bottom:8px}.block-name{font-weight:900;color:#fff}.block-meta{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.badge{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.65rem;font-weight:900;letter-spacing:1px;text-transform:uppercase}.badge-blue{border:1px solid rgba(80,160,255,.35);background:rgba(80,160,255,.12);color:#9fc9ff}.badge-green{border:1px solid rgba(0,200,100,.45);background:rgba(0,200,100,.1);color:#00c864}.badge-yellow{border:1px solid rgba(255,204,102,.45);background:rgba(255,204,102,.1);color:#ffcc66}.preview{display:none}.preview.show{display:block}.preview-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.preview-title{font-size:1.25rem;font-weight:900}.preview-summary{color:#888;font-size:.84rem;margin-top:4px}.empty{border:1px dashed rgba(255,255,255,.13);border-radius:16px;padding:32px;color:#777;text-align:center;background:rgba(255,255,255,.02)}.import-status{display:none;border-radius:999px;border:1px solid rgba(0,200,100,.45);background:rgba(0,200,100,.1);color:#00c864;padding:7px 12px;font-size:.72rem;font-weight:900;letter-spacing:1px;text-transform:uppercase}.import-status.err{border-color:rgba(204,0,0,.45);background:rgba(204,0,0,.08);color:#ff6b6b}.log{display:none;background:#080808;border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;max-height:280px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;color:#aaa;line-height:1.55;white-space:pre-wrap;margin-top:14px}.log.show{display:block}.log-line.head{color:#fff;font-weight:900;margin-top:7px}.log-line.ok{color:#00c864}.log-line.err{color:#ff6b6b}.log-line.info{color:#9fc9ff}.toast{position:fixed;right:24px;bottom:24px;background:#1a1a1a;border:1px solid rgba(139,0,0,.4);color:white;padding:12px 20px;border-radius:10px;font-size:.85rem;z-index:999;opacity:0;transform:translateY(10px);transition:.3s}.toast.show{opacity:1;transform:translateY(0)}.toast.success{border-color:#00c864;color:#00c864}.toast.error{border-color:#cc0000;color:#ff6b6b}@media(max-width:980px){.layout{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="topbar"><a href="home.html" class="logo-area"><img src="logo.jpg" alt="RS Fitness"><span>RS FITNESS</span></a><button class="logout" onclick="rsAuth.signOut()">LOGOUT</button></div>
+<div class="page">
+  <a href="program-builder.html" class="back" onclick="event.preventDefault(); history.back();">← Back to Program Builder</a>
+  <div class="header">
+    <div><h1 class="brand-title">IMPORT <span>BLOCK</span></h1><div class="subtitle">Upload one Excel sheet/block at a time. Same block name replaces the existing block; new block name appends.</div></div>
+    <div class="actions"><span id="importStatus" class="import-status"></span><button id="importBtn" class="btn-red" onclick="doImport()" disabled>IMPORT BLOCK</button><button class="btn" onclick="clearFile()">CLEAR FILE</button></div>
+  </div>
+  <div class="layout">
+    <aside class="panel">
+      <div class="panel-head"><div class="panel-title">IMPORT <span>STEPS</span></div></div>
+      <div class="panel-body">
+        <div class="step"><div class="step-title">1. SELECT <span>CLIENT</span></div><div class="label">Client</div><select id="clientSelect" class="select" onchange="onClientChange()"><option value="">Loading clients...</option></select><div class="muted" style="margin-top:8px">If you came from Program Builder, the client should auto-select.</div></div>
+        <div class="step" id="existingBlocksWrap" style="display:none"><div class="step-title">EXISTING <span>BLOCKS</span></div><div id="existingBlocks"></div></div>
+        <div class="step"><div class="step-title">2. UPLOAD <span>EXCEL</span></div><input id="fileInput" type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(this.files[0])"><div id="dropzone" class="dropzone" onclick="document.getElementById('fileInput').click()"><div class="drop-title" id="dropzoneTitle">Click to select or drag & drop</div><div class="drop-sub">Upload a single-sheet Excel file. One sheet = one block.</div></div><div id="fileError" class="file-error"></div></div>
+      </div>
+    </aside>
+    <main class="panel">
+      <div class="panel-head"><div class="panel-title">PREVIEW <span>& IMPORT</span></div></div>
+      <div class="panel-body">
+        <div id="replaceWarning" class="warning" style="display:none"></div>
+        <div id="previewPanel" class="preview">
+          <div class="preview-head"><div><div class="preview-title" id="previewTitle">Block</div><div class="preview-summary" id="previewSummary">—</div></div><button class="btn-red" onclick="doImport()">IMPORT THIS BLOCK</button></div>
+          <div id="previewWeeks"></div>
+        </div>
+        <div id="noPreview" class="empty">Select a client and upload an Excel file to preview the parsed block.</div>
+        <div id="log" class="log"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<script src="app-auth.js"></script>
+<script>
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function uid(){return 'i_'+Math.random().toString(36).slice(2,11)+Date.now().toString(36)}
+
+let parsedBlock=null,clients=[],existingProgram=null,workoutRepo=[];
+
+function toast(msg,type='success'){
+  if(window.rsAuth&&typeof rsAuth.toast==='function')rsAuth.toast(msg,type);
+  else console[type==='error'?'error':'log'](msg);
+}
+
+async function init(){
+  try{
+    if(!window.rsAuth)throw new Error('app-auth.js did not load. Check that app-auth.js is in the same GitHub folder.');
+    const p=await rsAuth.requireRoles(['super_admin','coach']);
+    if(!p)return;
+    await loadClients();
+    await loadWorkoutRepo();
+    const urlId=new URLSearchParams(location.search).get('id')||new URLSearchParams(location.search).get('client_id');
+    if(urlId){
+      const sel=document.getElementById('clientSelect');
+      sel.value=urlId;
+      if(sel.value===urlId)onClientChange();
+      else showError('Client ID from URL was not found in the client list.');
+    }
+  }catch(e){
+    console.error(e);
+    const sel=document.getElementById('clientSelect');
+    if(sel)sel.innerHTML='<option value="">Error loading clients</option>';
+    showError(e.message||'Import page failed to initialize.');
+  }
+}
+
+async function loadClients(){
+  const sel=document.getElementById('clientSelect');
+  sel.innerHTML='<option value="">Loading clients...</option>';
+  clients=await rsAuth.dbSelect('clients','select=id,name,program_data&order=name.asc');
+  sel.innerHTML='<option value="">— Select a client —</option>'+clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+}
+
+async function loadWorkoutRepo(){
+  workoutRepo=await rsAuth.dbSelect('workouts','select=id,name,category&order=name.asc');
+}
+
+function onClientChange(){
+  const id=document.getElementById('clientSelect').value;
+  const client=clients.find(c=>String(c.id)===String(id));
+  existingProgram=null;
+  document.getElementById('existingBlocksWrap').style.display='none';
+  if(!client){updateImportBtn();return;}
+  const prog=client.program_data;
+  if(prog&&Array.isArray(prog.blocks)&&prog.blocks.length){
+    existingProgram=prog;
+    document.getElementById('existingBlocksWrap').style.display='block';
+    document.getElementById('existingBlocks').innerHTML=prog.blocks.map(b=>{
+      const weeks=b.weeks?.length||0;
+      const days=(b.weeks||[]).reduce((n,w)=>n+(w.days?.length||0),0);
+      return `<div class="block-row"><div class="block-name">${esc(b.name)} <span class="badge badge-blue">${weeks}w · ${days}d</span></div></div>`;
+    }).join('');
+  }
+  updateImportBtn();
+  refreshReplaceWarning();
+}
+
+function cleanVal(v){
+  if(v===null||v===undefined)return'';
+  const s=String(v).replace(/\r/g,'').trim();
+  if(s.startsWith('='))return'';
+  return s;
+}
+function textNorm(v){return String(v??'').replace(/\s+/g,' ').trim()}
+function lowerNorm(v){return textNorm(v).toLowerCase()}
+function isDayHeader(v){return /^day\s*\d+/i.test(textNorm(v))}
+function dayNameFromHeader(v,fallback){const m=textNorm(v).match(/^(day\s*\d+)/i);return m?m[1].replace(/\s+/g,' ').replace(/^day/i,'Day'):`Day ${fallback}`}
+function isSummaryRow(vals){return /Session\s+Duration|Session\s+Difficulty|Running|Overall\s+Mileage|Protocols/i.test(vals.map(textNorm).join(' | '))}
+function isHeaderText(v){
+  const s=lowerNorm(v);
+  if(!s)return false;
+  const labels=['date of workout','exercises','exercise','sets x reps','sets','reps','intensity','weights / load suggested','weight / load suggested','load suggested','suggested load','load','lsrpe','rpe','comments from coach','coach comments','comments from trainee','trainee comments','session duration','session difficulty','running','overall mileage','protocols'];
+  return labels.some(x=>s===x||s.startsWith(x));
+}
+function isExercise(v){
+  if(!v)return false;
+  const s=textNorm(v);
+  if(!s||s.length<2)return false;
+  if(isDayHeader(s))return false;
+  if(/^week\s*\d+/i.test(s))return false;
+  if(/^[-–—]+$/.test(s))return false;
+  if(isHeaderText(s))return false;
+  return true;
+}
+function parseExerciseName(raw){
+  const s=textNorm(raw);
+  const isTopSet=s.includes('**');
+  const cleanName=s.replace(/\*+/g,'').replace(/\s+/g,' ').trim();
+  return{cleanName,isTopSet};
+}
+function splitSetsReps(v){
+  const s=cleanVal(v);
+  if(!s)return{sets:'',reps:''};
+  const m=s.match(/^(\d+)\s*[x×]\s*(.+)$/i);
+  if(m)return{sets:m[1].trim(),reps:m[2].trim()};
+  return{sets:s,reps:''};
+}
+function mergeComment(existing,incoming){
+  const a=cleanVal(existing),b=cleanVal(incoming);
+  if(!b)return a;
+  if(!a)return b;
+  if(a.toLowerCase().includes(b.toLowerCase()))return a;
+  return a+'\n'+b;
+}
+function headerKey(v){
+  const s=lowerNorm(v).replace(/[:]/g,'');
+  if(!s)return'';
+  if(s.includes('date of workout'))return'date';
+  if(s==='exercises'||s==='exercise')return'ex';
+  if(s.includes('sets')&&s.includes('reps'))return'sets';
+  if(s==='sets')return'sets';
+  if(s==='reps')return'reps';
+  if(s==='intensity'||s.includes('intensity'))return'int_';
+  if((s.includes('weight')||s.includes('load'))&&s.includes('suggested'))return'sug';
+  if(s==='load')return'load';
+  if(s==='lsrpe'||s==='rpe'||s.includes('lsrpe'))return'rpe';
+  if(s.includes('comments from coach')||s.includes('coach comment'))return'coa';
+  if(s.includes('comments from trainee')||s.includes('trainee comment'))return'tra';
+  return'';
+}
+function countMappedKeys(obj){return Object.keys(obj).filter(k=>obj[k]!==null&&obj[k]!==undefined).length}
+function fixedColumnMap(startCol){return{date:startCol,ex:startCol+1,sets:startCol+2,int_:startCol+3,sug:startCol+4,load:startCol+5,rpe:startCol+6,coa:startCol+7,tra:startCol+8}}
+function rowHasAny(row,start,end){for(let c=start;c<=end;c++){if(cleanVal(row[c]))return true}return false}
+
+function findWeekHeaderRow(raw){
+  const candidates=[];
+  const scanRows=Math.min(raw.length,80);
+  for(let ri=0;ri<scanRows;ri++){
+    const row=raw[ri]||[];
+    const headers=[];
+    for(let ci=0;ci<row.length;ci++){
+      const s=textNorm(row[ci]);
+      if(/\bweek\s*\d+\b/i.test(s))headers.push({ci,header:s});
+    }
+    if(headers.length)candidates.push({ri,headers});
+  }
+  if(!candidates.length)return null;
+  candidates.sort((a,b)=>b.headers.length-a.headers.length || a.ri-b.ri);
+  return candidates[0];
+}
+
+function findWeekTable(raw,headerRow,wHeaderCol,nextWeekCol){
+  /*
+    IMPORTANT FIX:
+    The old version searched several columns to the LEFT of the week title.
+    In messy sheets with horizontal week tables, that could mix columns from
+    the previous week into the current week. Example: Week 5 title + Week 4
+    Load/LSRPE/comments.
+
+    New rule:
+    - Find the actual "Date of Workout" header nearest to this Week title.
+    - Treat that date column as the start of this week table.
+    - Only map columns from that start column moving right.
+    This keeps Week 4 data inside Week 4 and Week 5 data inside Week 5.
+  */
+  let best=null;
+  const maxLabelRow=Math.min(raw.length-1,headerRow+10);
+  const searchLeft=Math.max(0,wHeaderCol-7);
+  const searchRight=Math.min(nextWeekCol?nextWeekCol-1:wHeaderCol+16,wHeaderCol+12);
+
+  for(let ri=headerRow+1;ri<=maxLabelRow;ri++){
+    const row=raw[ri]||[];
+    for(let ci=searchLeft;ci<=searchRight;ci++){
+      if(headerKey(row[ci])!=='date')continue;
+
+      const startCol=ci;
+      const map={};
+      const hardRight=Math.min(nextWeekCol?nextWeekCol-1:startCol+12,startCol+12);
+
+      for(let cj=startCol;cj<=hardRight;cj++){
+        const key=headerKey(row[cj]);
+        if(key&&!Object.prototype.hasOwnProperty.call(map,key))map[key]=cj;
+      }
+
+      const score=countMappedKeys(map);
+      if(score<2)continue;
+
+      const distance=Math.abs(startCol-wHeaderCol);
+      const hasCore=(map.date!==undefined?1:0)+(map.ex!==undefined?1:0)+(map.sets!==undefined?1:0)+(map.int_!==undefined?1:0);
+      const candidate={labelRow:ri,map,startCol,score,distance,hasCore};
+
+      if(
+        !best ||
+        candidate.hasCore>best.hasCore ||
+        (candidate.hasCore===best.hasCore && candidate.score>best.score) ||
+        (candidate.hasCore===best.hasCore && candidate.score===best.score && candidate.distance<best.distance)
+      ){
+        best=candidate;
+      }
+    }
+  }
+
+  if(best){
+    return{
+      labelRow:best.labelRow,
+      C:{...fixedColumnMap(best.startCol),...best.map},
+      mode:'date-label',
+      score:best.score,
+      startCol:best.startCol
+    };
+  }
+
+  // Last-resort fallback: keep the old fixed behavior, but do NOT reach into the previous week table.
+  const fallbackStart=wHeaderCol;
+  return{labelRow:headerRow+1,C:fixedColumnMap(fallbackStart),mode:'fixed',score:0,startCol:fallbackStart};
+}
+function buildLine(ri,getCell,coachPrefix=''){
+  const sr=splitSetsReps(getCell(ri,'sets'));
+  const explicitReps=cleanVal(getCell(ri,'reps'));
+  const rawCoach=cleanVal(getCell(ri,'coa'));
+  const coach=coachPrefix?mergeComment(coachPrefix,rawCoach):rawCoach;
+  return{
+    id:uid(),
+    sets:sr.sets,
+    reps:explicitReps||sr.reps,
+    intensity:cleanVal(getCell(ri,'int_')),
+    suggested_load:cleanVal(getCell(ri,'sug')),
+    load:cleanVal(getCell(ri,'load')),
+    lsrpe:cleanVal(getCell(ri,'rpe')),
+    coach_comments:coach,
+    trainee_comments:cleanVal(getCell(ri,'tra'))
+  };
+}
+function lineHasSetData(ri,getCell){return['sets','reps','int_','sug','load','rpe'].some(k=>cleanVal(getCell(ri,k)))}
+function rowHasComments(ri,getCell){return['coa','tra'].some(k=>cleanVal(getCell(ri,k)))}
+function appendCommentsToPreviousLine(exercise,coach,trainee){
+  if(!exercise)return;
+  if(!exercise.lines||!exercise.lines.length)exercise.lines=[{id:uid(),sets:'',reps:'',intensity:'',suggested_load:'',load:'',lsrpe:'',coach_comments:'',trainee_comments:''}];
+  const line=exercise.lines[exercise.lines.length-1];
+  line.coach_comments=mergeComment(line.coach_comments,coach);
+  line.trainee_comments=mergeComment(line.trainee_comments,trainee);
+}
+function buildExercise(ri,getCell,exVal){
+  const{cleanName,isTopSet}=parseExerciseName(exVal);
+  const coachPrefix=isTopSet?'Send a video of last set.':'';
+  return{id:uid(),exercise_name:cleanName,custom_exercise_name:'',workout_id:'',_is_top_set:isTopSet,lines:[buildLine(ri,getCell,coachPrefix)]};
+}
+
+function parseBlock(wb){
+  if(wb.SheetNames.length!==1)throw new Error(`This file has ${wb.SheetNames.length} sheets. Please save only one block tab as its own file and re-upload.`);
+  const sheetName=wb.SheetNames[0];
+  const ws=wb.Sheets[sheetName];
+  const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null,raw:false});
+  if(!raw||raw.length<3)throw new Error('Sheet appears empty or too small to parse.');
+
+  const found=findWeekHeaderRow(raw);
+  if(!found)throw new Error('Could not find any Week headers. I scanned the first 80 rows, but no cell looked like "Week 1", "Week 2", etc.');
+
+  found.headers.sort((a,b)=>a.ci-b.ci);
+  const block={id:uid(),name:sheetName,weeks:[]};
+
+  for(let hi=0;hi<found.headers.length;hi++){
+    const wh=found.headers[hi];
+    const nextWeekCol=found.headers[hi+1]?.ci||null;
+    const table=findWeekTable(raw,found.ri,wh.ci,nextWeekCol);
+    const C=table.C;
+    const wHeader=wh.header;
+    const wNumMatch=wHeader.match(/Week\s*(\d+)/i);
+    const wNum=wNumMatch?wNumMatch[1]:'?';
+    const objMatch=wHeader.match(/\(Objective:\s*(.*?)\)/i);
+    const objective=objMatch?objMatch[1].trim():'';
+    const week={id:uid(),name:`Week ${wNum}`,objective,days:[]};
+    const dataStart=table.labelRow+1;
+    const dataEnd=nextWeekCol?raw.length:raw.length;
+
+    function getCell(ri,col){
+      const c=C[col];
+      if(c===null||c===undefined)return null;
+      return(raw[ri]||[])[c]??null;
+    }
+    function groupVals(ri){return['date','ex','sets','reps','int_','sug','load','rpe','coa','tra'].map(k=>getCell(ri,k))}
+
+    let currentDay=null,dayCounter=0,currentExercise=null;
+    let emptyStreak=0;
+
+    for(let ri=dataStart;ri<dataEnd;ri++){
+      const row=raw[ri]||[];
+      const minC=Math.min(...Object.values(C).filter(v=>Number.isFinite(v)));
+      const maxC=Math.max(...Object.values(C).filter(v=>Number.isFinite(v)));
+      const hasAny=rowHasAny(row,minC,maxC);
+      if(!hasAny){emptyStreak++; if(emptyStreak>25&&currentDay)break; continue;}
+      emptyStreak=0;
+
+      const vals=groupVals(ri);
+      if(isSummaryRow(vals))continue;
+
+      const dateVal=getCell(ri,'date');
+      const exVal=getCell(ri,'ex');
+      const setData=lineHasSetData(ri,getCell);
+      const hasComments=rowHasComments(ri,getCell);
+
+      if(isDayHeader(dateVal)){
+        if(currentDay)week.days.push(currentDay);
+        dayCounter++;
+        currentDay={id:uid(),name:dayNameFromHeader(dateVal,dayCounter),workout_date:'',source_date_label:textNorm(dateVal),status:'not_completed',completed_at:'',day_remarks:'',exercises:[]};
+        currentExercise=null;
+        if(isExercise(exVal)){
+          currentExercise=buildExercise(ri,getCell,exVal);
+          currentDay.exercises.push(currentExercise);
+        }
+        continue;
+      }
+
+      if(!currentDay)continue;
+
+      if(isExercise(exVal)){
+        currentExercise=buildExercise(ri,getCell,exVal);
+        currentDay.exercises.push(currentExercise);
+      }else if(currentExercise&&setData){
+        currentExercise.lines.push(buildLine(ri,getCell));
+      }else if(currentExercise&&hasComments){
+        appendCommentsToPreviousLine(currentExercise,cleanVal(getCell(ri,'coa')),cleanVal(getCell(ri,'tra')));
+      }
+    }
+    if(currentDay)week.days.push(currentDay);
+    if(week.days.length)block.weeks.push(week);
+  }
+
+  if(!block.weeks.length)throw new Error('Week headers were found, but no Day sections were parsed. Check that day cells start with "Day 1", "Day 2", etc.');
+  return block;
+}
+
+function handleFile(file){
+  if(!file)return;
+  clearError();
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      if(!window.XLSX)throw new Error('Excel library not loaded yet. Try again in a moment.');
+      const wb=XLSX.read(e.target.result,{type:'binary',cellDates:false});
+      parsedBlock=parseBlock(wb);
+      document.getElementById('dropzone').classList.remove('error-file');
+      document.getElementById('dropzone').classList.add('has-file');
+      document.getElementById('dropzoneTitle').textContent=file.name;
+      renderPreview();
+    }catch(err){
+      console.error(err);
+      showError(err.message);
+      document.getElementById('dropzone').classList.add('error-file');
+      document.getElementById('dropzoneTitle').textContent='Error — try again';
+      parsedBlock=null;
+      document.getElementById('previewPanel').classList.remove('show');
+      updateImportBtn();
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+function showError(msg){
+  const el=document.getElementById('fileError');
+  el.innerHTML=`<strong>⚠ Error:</strong> ${esc(msg)}`;
+  el.style.display='block';
+}
+function clearError(){document.getElementById('fileError').style.display='none'}
+function clearFile(){
+  parsedBlock=null;
+  document.getElementById('fileInput').value='';
+  document.getElementById('dropzone').classList.remove('has-file','error-file');
+  document.getElementById('dropzoneTitle').textContent='Click to select or drag & drop';
+  document.getElementById('previewPanel').classList.remove('show');
+  document.getElementById('log').classList.remove('show');
+  document.getElementById('log').innerHTML='';
+  document.getElementById('importStatus').style.display='none';
+  clearError();
+  updateImportBtn();
+}
+
+function renderPreview(){
+  if(!parsedBlock)return;
+  const b=parsedBlock;
+  const totalDays=b.weeks.reduce((n,w)=>n+w.days.length,0);
+  const totalExercises=b.weeks.reduce((n,w)=>w.days.reduce((m,d)=>m+d.exercises.length,0)+n,0);
+  const totalSetRows=b.weeks.reduce((n,w)=>w.days.reduce((m,d)=>m+d.exercises.reduce((x,e)=>x+(e.lines?.length||1),0),0)+n,0);
+  const topSets=b.weeks.reduce((n,w)=>w.days.reduce((m,d)=>d.exercises.filter(e=>e._is_top_set).length+m,0)+n,0);
+  const repoNames=new Set(workoutRepo.map(w=>String(w.name||'').toLowerCase()));
+  const allExNames=[...new Set(b.weeks.flatMap(w=>w.days.flatMap(d=>d.exercises.map(e=>e.exercise_name))))];
+  const newExercises=allExNames.filter(n=>n&&!repoNames.has(String(n).toLowerCase()));
+
+  document.getElementById('previewTitle').textContent=b.name;
+  document.getElementById('previewSummary').textContent=`${b.weeks.length} weeks · ${totalDays} days · ${totalExercises} exercises · ${totalSetRows} set rows`;
+  document.getElementById('previewWeeks').innerHTML=b.weeks.map(w=>{
+    const dCount=w.days.length;
+    const eCount=w.days.reduce((n,d)=>n+d.exercises.length,0);
+    const rCount=w.days.reduce((n,d)=>n+d.exercises.reduce((x,e)=>x+(e.lines?.length||1),0),0);
+    const obj=w.objective?`<span style="color:#888;font-size:.76rem;font-weight:400"> — ${esc(w.objective)}</span>`:'';
+    return`<div class="block-row"><div class="block-name">${esc(w.name)}${obj}</div><div class="block-meta"><span><span class="badge badge-blue">${dCount} day${dCount!==1?'s':''}</span></span><span><span class="badge badge-green">${eCount} exercises · ${rCount} rows</span></span></div></div>`;
+  }).join('')+
+  (newExercises.length?`<div class="warning" style="margin-top:12px"><strong>⚠ ${newExercises.length} new exercise${newExercises.length!==1?'s':''} will be created in Workout Repository</strong> as Uncategorized:<br><span style="color:#fff;opacity:.75">${newExercises.map(n=>esc(n)).join(' · ')}</span></div>`:'')+
+  (topSets?`<div style="margin-top:12px;font-size:.8rem;color:#888"><span class="badge badge-yellow" style="margin-right:6px">${topSets} top set exercise${topSets!==1?'s':''}</span>will receive "Send a video of last set" as coach comment.</div>`:'');
+
+  refreshReplaceWarning();
+  document.getElementById('previewPanel').classList.add('show');
+  updateImportBtn();
+}
+
+function refreshReplaceWarning(){
+  const warn=document.getElementById('replaceWarning');
+  if(!parsedBlock||!existingProgram){warn.style.display='none';return}
+  const match=existingProgram.blocks.find(b=>String(b.name).trim().toLowerCase()===String(parsedBlock.name).trim().toLowerCase());
+  if(match){
+    warn.innerHTML=`<strong>⚠ "${esc(parsedBlock.name)}" already exists in this client's program.</strong> Importing will replace that block and all its logged data.`;
+    warn.style.display='block';
+  }else warn.style.display='none';
+}
+
+async function doImport(){
+  const clientId=document.getElementById('clientSelect').value;
+  if(!clientId||!parsedBlock)return;
+  const btn=document.getElementById('importBtn');
+  const status=document.getElementById('importStatus');
+  btn.disabled=true;btn.textContent='IMPORTING...';status.style.display='none';
+  const log=document.getElementById('log');
+  log.innerHTML='';log.classList.add('show');
+  function lg(msg,type=''){
+    const d=document.createElement('div');
+    d.className='log-line'+(type?' '+type:'');
+    d.textContent=msg;
+    log.appendChild(d);
+    log.scrollTop=log.scrollHeight;
+  }
+  try{
+    lg('▶ Starting import...','head');
+    lg(`  Block: ${parsedBlock.name}`);
+    lg('▶ Syncing exercises to Workout Repository...','head');
+    workoutRepo=await rsAuth.dbSelect('workouts','select=id,name,category&order=name.asc');
+    const repoMap=new Map(workoutRepo.map(w=>[String(w.name||'').toLowerCase(),w]));
+    const allExNames=[...new Set(parsedBlock.weeks.flatMap(w=>w.days.flatMap(d=>d.exercises.map(e=>e.exercise_name))))].filter(Boolean);
+    const nameToId=new Map();
+    for(const name of allExNames){
+      const key=String(name).toLowerCase();
+      if(repoMap.has(key)){
+        nameToId.set(name,repoMap.get(key).id);
+        lg(`  ✓ Found: ${name}`,'ok');
+      }else{
+        const nw=await rsAuth.dbInsert('workouts',{name,category:'Uncategorized',description:'',youtube_url:''});
+        nameToId.set(name,nw.id);
+        repoMap.set(key,nw);
+        lg(`  + Created: ${name}`,'info');
+      }
+    }
+    lg('▶ Linking exercises...','head');
+    for(const w of parsedBlock.weeks){
+      for(const d of w.days){
+        for(const e of d.exercises){
+          e.workout_id=nameToId.get(e.exercise_name)||'';
+          delete e._is_top_set;
+        }
+      }
+    }
+    lg('▶ Merging block into client program...','head');
+    const fresh=await rsAuth.dbGet('clients',`id=eq.${encodeURIComponent(clientId)}`);
+    const prog=fresh?.program_data||{blocks:[]};
+    if(!Array.isArray(prog.blocks))prog.blocks=[];
+    const idx=prog.blocks.findIndex(b=>String(b.name).trim().toLowerCase()===String(parsedBlock.name).trim().toLowerCase());
+    if(idx>=0){prog.blocks[idx]=parsedBlock;lg(`  Replaced: ${parsedBlock.name}`,'info')}
+    else{prog.blocks.push(parsedBlock);lg(`  Appended: ${parsedBlock.name}`,'info')}
+    lg('▶ Saving...','head');
+    await rsAuth.dbPatch('clients',`id=eq.${encodeURIComponent(clientId)}`,{program_data:prog});
+    const c=clients.find(x=>x.id===clientId);
+    if(c)c.program_data=prog;
+    existingProgram=prog;
+    onClientChange();
+    lg('✓ Import complete!','ok');
+    status.textContent='✓ Import complete';
+    status.className='import-status';
+    status.style.display='inline';
+    toast('Block imported successfully!','success');
+  }catch(e){
+    console.error(e);
+    lg('✗ Error: '+(e.message||JSON.stringify(e)),'err');
+    status.textContent='✗ Import failed';
+    status.className='import-status err';
+    status.style.display='inline';
+    toast('Import failed: '+e.message,'error');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='IMPORT BLOCK';
+    updateImportBtn();
+  }
+}
+
+function updateImportBtn(){
+  const sel=document.getElementById('clientSelect');
+  const btn=document.getElementById('importBtn');
+  if(btn)btn.disabled=!(sel&&sel.value&&parsedBlock);
+}
+
+const dz=document.getElementById('dropzone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{
+  e.preventDefault();
+  dz.classList.remove('drag');
+  const f=e.dataTransfer.files[0];
+  if(f)handleFile(f);
+});
+
+init();
+
+</script>
+
+<script>
+(function(){
+  const previewPanel=document.getElementById('previewPanel');
+  const noPreview=document.getElementById('noPreview');
+  if(previewPanel&&noPreview){
+    const obs=new MutationObserver(()=>{noPreview.style.display=previewPanel.classList.contains('show')?'none':'block';});
+    obs.observe(previewPanel,{attributes:true,attributeFilter:['class']});
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RS Fitness | Video Repository</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: #111111;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(139,0,0,0.3);
+      background: rgba(10,10,10,0.98);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .logo-area img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 8px rgba(139,0,0,0.6));
+      transition: filter 0.3s;
+    }
+
+    .logo-area:hover img {
+      filter: drop-shadow(0 0 14px rgba(204,0,0,0.9));
+    }
+
+    .logo-area span {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: white;
+      letter-spacing: 3px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .chat-btn {
+      position: relative;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+    }
+
+    .chat-btn:hover {
+      background: rgba(139,0,0,0.3);
+      border-color: #8B0000;
+    }
+
+    .chat-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #cc0000;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+    .logout-btn {
+      background: rgba(139,0,0,0.2);
+      border: 1px solid rgba(139,0,0,0.4);
+      color: #ff6b6b;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    .logout-btn:hover {
+      background: rgba(139,0,0,0.5);
+      border-color: #cc0000;
+      color: white;
+    }
+
+    .sub-nav {
+      background: rgba(15,15,15,0.98);
+      border-bottom: 1px solid rgba(139,0,0,0.2);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      position: sticky;
+      top: 75px;
+      z-index: 99;
+      overflow-x: auto;
+    }
+
+    .sub-nav::-webkit-scrollbar { display: none; }
+
+    .nav-link {
+      color: #888;
+      text-decoration: none;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 14px 16px;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .nav-link:hover {
+      color: white;
+      border-bottom-color: #cc0000;
+    }
+
+    .nav-link.active {
+      color: #cc0000;
+      border-bottom-color: #cc0000;
+    }
+
+    .search-bar-wrap {
+      padding: 24px 32px 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .search-input-wrap {
+      position: relative;
+    }
+
+    .search-input-wrap svg {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #555;
+      width: 18px;
+      height: 18px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 14px 12px 42px;
+      color: white;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.3s;
+      box-sizing: border-box;
+    }
+
+    .search-input:focus {
+      border-color: #8B0000;
+      box-shadow: 0 0 0 3px rgba(139,0,0,0.2);
+      outline: none;
+    }
+
+    .search-input::placeholder { color: #555; }
+
+    .page-content {
+      padding: 24px 32px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 40px 0 20px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      color: white;
+      letter-spacing: 3px;
+    }
+
+    .section-title span { color: #cc0000; }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(139,0,0,0.3);
+    }
+
+    .exercise-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .exercise-card {
+      background: #1a1a1a;
+      border: 1px solid rgba(139,0,0,0.15);
+      border-radius: 12px;
+      padding: 16px;
+      transition: all 0.3s;
+    }
+
+    .exercise-card:hover {
+      border-color: #cc0000;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(139,0,0,0.15);
+    }
+
+    .exercise-card.hidden { display: none; }
+
+    .exercise-name {
+      color: white;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .exercise-desc {
+      color: #666;
+      font-size: 0.78rem;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .watch-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #cc0000;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .watch-link:hover { color: #ff3333; }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: #444;
+      display: none;
+    }
+
+    .no-results p {
+      font-size: 1rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <a href="home.html" class="logo-area">
+      <img src="logo.jpg" alt="RS Fitness" />
+      <span>RS FITNESS</span>
+    </a>
+    <div class="top-actions">
+      <div class="chat-btn" title="Messages">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="20" height="20">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
+        </svg>
+        <div class="chat-badge">3</div>
+      </div>
+      <button class="logout-btn" onclick="window.location.href='index.html'">LOGOUT</button>
+    </div>
+  </div>
+
+  <!-- Sub Nav -->
+  <div class="sub-nav">
+    <a href="#chest" class="nav-link active">Chest</a>
+    <a href="#back" class="nav-link">Back</a>
+    <a href="#shoulders" class="nav-link">Shoulders</a>
+    <a href="#arms" class="nav-link">Arms</a>
+    <a href="#legs" class="nav-link">Legs</a>
+    <a href="#core" class="nav-link">Core</a>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar-wrap">
+    <div class="search-input-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search exercises..." oninput="searchExercises()" />
+    </div>
+  </div>
+
+  <!-- Page Content -->
+  <div class="page-content">
+
+    <div class="no-results" id="noResults">
+      <p>No exercises found for your search.</p>
+    </div>
+
+    <!-- CHEST -->
+    <div id="chest" class="body-section">
+      <div class="section-header">
+        <div class="section-title">CHEST</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Barbell Bench Press" data-section="chest"><div class="exercise-name">Barbell Bench Press</div><div class="exercise-desc">Lie flat on bench, grip bar slightly wider than shoulder-width, lower to chest and press up. Primary compound movement for chest mass.</div><a href="https://www.youtube.com/watch?v=vcBig73ojpE" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Incline Barbell Press" data-section="chest"><div class="exercise-name">Incline Barbell Press</div><div class="exercise-desc">Set bench to 30-45 degrees. Targets upper chest. Keep elbows at 75 degrees to reduce shoulder strain.</div><a href="https://www.youtube.com/watch?v=DbFgADa2PL8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Decline Barbell Press" data-section="chest"><div class="exercise-name">Decline Barbell Press</div><div class="exercise-desc">Bench set at negative angle. Emphasizes lower chest. Secure feet and maintain controlled descent.</div><a href="https://www.youtube.com/watch?v=LfyQTYMOCqk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Flat Press" data-section="chest"><div class="exercise-name">Dumbbell Flat Press</div><div class="exercise-desc">Greater range of motion than barbell. Allows independent arm movement to correct imbalances. Press and squeeze at top.</div><a href="https://www.youtube.com/watch?v=VmB1G1K7v94" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Incline Press" data-section="chest"><div class="exercise-name">Dumbbell Incline Press</div><div class="exercise-desc">Upper chest focus with dumbbells. Keep wrists neutral and control the descent for maximum muscle activation.</div><a href="https://www.youtube.com/watch?v=8iPEnn-ltC8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Fly" data-section="chest"><div class="exercise-name">Cable Fly</div><div class="exercise-desc">Set cables at chest height. Maintain constant tension through the movement. Great for chest isolation and stretch.</div><a href="https://www.youtube.com/watch?v=taI4XduLpTk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Incline Cable Fly" data-section="chest"><div class="exercise-name">Incline Cable Fly</div><div class="exercise-desc">Cables set low, press upward in arc motion. Isolates upper chest with constant tension throughout range of motion.</div><a href="https://www.youtube.com/watch?v=X7_UNjlnzPM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Fly" data-section="chest"><div class="exercise-name">Dumbbell Fly</div><div class="exercise-desc">Arms wide, slight bend at elbows. Lower weights in arc, feel deep chest stretch, bring back together at top.</div><a href="https://www.youtube.com/watch?v=eozdVDA78K0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Push-Up" data-section="chest"><div class="exercise-name">Push-Up</div><div class="exercise-desc">Bodyweight classic. Keep core tight, body straight. Hands slightly wider than shoulders. Full range of motion.</div><a href="https://www.youtube.com/watch?v=IODxDxX7oi4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Wide Push-Up" data-section="chest"><div class="exercise-name">Wide Push-Up</div><div class="exercise-desc">Wider hand placement increases chest activation. Keep elbows flared and focus on squeezing chest at top.</div><a href="https://www.youtube.com/watch?v=0pkjOk0EiAk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Chest Dip" data-section="chest"><div class="exercise-name">Chest Dip</div><div class="exercise-desc">Lean forward slightly to shift focus to chest. Lower until shoulders below elbows, press back up. Add weight when ready.</div><a href="https://www.youtube.com/watch?v=2z8JmcrW-As" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Pec Deck Machine" data-section="chest"><div class="exercise-name">Pec Deck Machine</div><div class="exercise-desc">Great isolation machine. Keep back flat against pad, bring arms together slowly and squeeze at peak contraction.</div><a href="https://www.youtube.com/watch?v=Z57CtFmRMxA" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Smith Machine Bench Press" data-section="chest"><div class="exercise-name">Smith Machine Bench Press</div><div class="exercise-desc">Guided bar path for beginners or heavy sets. Position body slightly forward to replicate natural bar path.</div><a href="https://www.youtube.com/watch?v=uUGDRwge4F8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Landmine Press" data-section="chest"><div class="exercise-name">Landmine Press</div><div class="exercise-desc">Anchored barbell press at angle. Great for shoulder-friendly chest pressing. Can be done unilaterally.</div><a href="https://www.youtube.com/watch?v=lYAHH7ZOOSQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Svend Press" data-section="chest"><div class="exercise-name">Svend Press</div><div class="exercise-desc">Hold two plates together, press forward while squeezing. Unique movement that creates constant inner chest tension.</div><a href="https://www.youtube.com/watch?v=PzdHgVb5lHg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Resistance Band Fly" data-section="chest"><div class="exercise-name">Resistance Band Fly</div><div class="exercise-desc">Anchor band behind you, perform fly motion. Increasing resistance as arms come together mimics cable fly.</div><a href="https://www.youtube.com/watch?v=4Ma0KIHK3yk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Floor Press" data-section="chest"><div class="exercise-name">Floor Press</div><div class="exercise-desc">Lying on floor limits range of motion, reduces shoulder involvement. Good for tricep and upper chest lockout strength.</div><a href="https://www.youtube.com/watch?v=SgrEMBmSJaU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Pullover" data-section="chest"><div class="exercise-name">Dumbbell Pullover</div><div class="exercise-desc">Lie perpendicular to bench, lower dumbbell behind head in arc. Works chest and lats. Keep slight bend in elbows.</div><a href="https://www.youtube.com/watch?v=FK4rHFDOHQQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Close Grip Bench Press" data-section="chest"><div class="exercise-name">Close Grip Bench Press</div><div class="exercise-desc">Hands shoulder-width apart. Shifts focus to triceps and inner chest. Keep elbows close to body throughout movement.</div><a href="https://www.youtube.com/watch?v=nEF0bv2FW94" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Guillotine Press" data-section="chest"><div class="exercise-name">Guillotine Press</div><div class="exercise-desc">Bar lowered to neck level with flared elbows. Maximum upper chest stretch. Use light weight and spot carefully.</div><a href="https://www.youtube.com/watch?v=FWJR5Ve8bnQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+    <!-- BACK -->
+    <div id="back" class="body-section">
+      <div class="section-header">
+        <div class="section-title">BACK</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Deadlift" data-section="back"><div class="exercise-name">Deadlift</div><div class="exercise-desc">King of all lifts. Hinge at hips, neutral spine, drive through floor. Works entire posterior chain.</div><a href="https://www.youtube.com/watch?v=op9kVnSso6Q" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Pull-Up" data-section="back"><div class="exercise-name">Pull-Up</div><div class="exercise-desc">Overhand grip, pull chest to bar. Initiate with lats not arms. Full hang at bottom, chin over bar at top.</div><a href="https://www.youtube.com/watch?v=eGo4IYlbE5g" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Chin-Up" data-section="back"><div class="exercise-name">Chin-Up</div><div class="exercise-desc">Underhand grip increases bicep involvement. Pull chest to bar, squeeze lats at top. Great for overall back width.</div><a href="https://www.youtube.com/watch?v=vl7jMEDTZnA" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Barbell Row" data-section="back"><div class="exercise-name">Barbell Row</div><div class="exercise-desc">Hinge at hips, pull bar to lower chest. Keep back parallel to floor. Squeeze shoulder blades at top.</div><a href="https://www.youtube.com/watch?v=9efgcAjQe7E" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Row" data-section="back"><div class="exercise-name">Dumbbell Row</div><div class="exercise-desc">Single arm. Brace on bench, pull dumbbell to hip. Full stretch at bottom, full contraction at top.</div><a href="https://www.youtube.com/watch?v=pYcpY20QaE8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Lat Pulldown" data-section="back"><div class="exercise-name">Lat Pulldown</div><div class="exercise-desc">Wide grip, pull bar to upper chest. Lean slightly back, drive elbows down and back. Squeeze lats at bottom.</div><a href="https://www.youtube.com/watch?v=CAwf7n6Luuc" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Row" data-section="back"><div class="exercise-name">Cable Row</div><div class="exercise-desc">Seated, neutral grip. Pull to lower chest, keep chest up. Full extension at front for maximum lat stretch.</div><a href="https://www.youtube.com/watch?v=GZbfZ033f74" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="T-Bar Row" data-section="back"><div class="exercise-name">T-Bar Row</div><div class="exercise-desc">Landmine or T-bar machine. Close grip, pull to chest. Great for mid-back thickness. Keep hips low.</div><a href="https://www.youtube.com/watch?v=j3Igk5nyZE4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Rack Pull" data-section="back"><div class="exercise-name">Rack Pull</div><div class="exercise-desc">Deadlift from knee height. Overloads upper back and traps. Great for building lockout strength and thickness.</div><a href="https://www.youtube.com/watch?v=vewOBcImqBU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Face Pull" data-section="back"><div class="exercise-name">Face Pull</div><div class="exercise-desc">Cable at head height, pull to face with external rotation. Targets rear delts and upper back. Essential for shoulder health.</div><a href="https://www.youtube.com/watch?v=rep-qVOkqgk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Straight Arm Pulldown" data-section="back"><div class="exercise-name">Straight Arm Pulldown</div><div class="exercise-desc">Arms straight, pull cable from overhead to hips. Pure lat isolation. Great finisher for lat engagement.</div><a href="https://www.youtube.com/watch?v=TD7K5VOVUBY" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Meadows Row" data-section="back"><div class="exercise-name">Meadows Row</div><div class="exercise-desc">Landmine unilateral row. Pull to hip with elbow flared. Targets outer lats and mid-back with unique angle.</div><a href="https://www.youtube.com/watch?v=CN_7cz3P-1I" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Chest Supported Row" data-section="back"><div class="exercise-name">Chest Supported Row</div><div class="exercise-desc">Incline bench support removes lower back fatigue. Allows full focus on back contraction. Great for isolation.</div><a href="https://www.youtube.com/watch?v=xQNrFHEMhI4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Inverted Row" data-section="back"><div class="exercise-name">Inverted Row</div><div class="exercise-desc">Bodyweight row under bar. Pull chest to bar, keep body straight. Difficulty adjusted by foot position.</div><a href="https://www.youtube.com/watch?v=dvkIaarnf0g" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Good Morning" data-section="back"><div class="exercise-name">Good Morning</div><div class="exercise-desc">Bar on back, hinge forward with straight back. Targets lower back and hamstrings. Use light weight with perfect form.</div><a href="https://www.youtube.com/watch?v=YA-h3n9L4YU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Back Extension" data-section="back"><div class="exercise-name">Back Extension</div><div class="exercise-desc">On hyperextension bench, lower torso down then raise back up. Strengthens erector spinae and glutes.</div><a href="https://www.youtube.com/watch?v=ph3pddpKzzw" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Pendlay Row" data-section="back"><div class="exercise-name">Pendlay Row</div><div class="exercise-desc">Bar starts on floor each rep. Explosive pull to lower chest. Teaches power generation from back muscles.</div><a href="https://www.youtube.com/watch?v=Weu9HMHdiDA" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Wide Grip Pulldown" data-section="back"><div class="exercise-name">Wide Grip Pulldown</div><div class="exercise-desc">Wider grip emphasizes outer lats for V-taper width. Pull to upper chest, squeeze at bottom of movement.</div><a href="https://www.youtube.com/watch?v=lueEJGjTuPQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Seated Machine Row" data-section="back"><div class="exercise-name">Seated Machine Row</div><div class="exercise-desc">Chest pad for support. Focus entirely on back contraction. Great for beginners learning the rowing movement pattern.</div><a href="https://www.youtube.com/watch?v=xQNrFHEMhI4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Shrug" data-section="back"><div class="exercise-name">Shrug</div><div class="exercise-desc">Hold dumbbells or barbell, elevate shoulders straight up. Hold at top. Builds upper trap thickness and neck appearance.</div><a href="https://www.youtube.com/watch?v=cJRVVxmytaM" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+    <!-- SHOULDERS -->
+    <div id="shoulders" class="body-section">
+      <div class="section-header">
+        <div class="section-title">SHOULDERS</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Overhead Press" data-section="shoulders"><div class="exercise-name">Overhead Press</div><div class="exercise-desc">Standing or seated. Press bar from clavicle to overhead. Keep core tight, avoid excessive back arch.</div><a href="https://www.youtube.com/watch?v=2yjwXTZQDDI" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Shoulder Press" data-section="shoulders"><div class="exercise-name">Dumbbell Shoulder Press</div><div class="exercise-desc">Seated or standing. Independent arm movement corrects imbalances. Press to just above head, controlled descent.</div><a href="https://www.youtube.com/watch?v=qEwKCR5JCog" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Lateral Raise" data-section="shoulders"><div class="exercise-name">Lateral Raise</div><div class="exercise-desc">Arms at sides, raise to shoulder height with slight forward tilt. Targets medial delts for shoulder width.</div><a href="https://www.youtube.com/watch?v=3VcKaXpzqRo" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Front Raise" data-section="shoulders"><div class="exercise-name">Front Raise</div><div class="exercise-desc">Raise arms forward to shoulder height. Targets anterior deltoid. Alternate arms or do simultaneously.</div><a href="https://www.youtube.com/watch?v=gkAV9a3Dil0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Rear Delt Fly" data-section="shoulders"><div class="exercise-name">Rear Delt Fly</div><div class="exercise-desc">Bent over or on incline bench. Arms arc backward targeting rear delts. Critical for balanced shoulder development.</div><a href="https://www.youtube.com/watch?v=EA7u4Q_8HQ0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Arnold Press" data-section="shoulders"><div class="exercise-name">Arnold Press</div><div class="exercise-desc">Start with palms facing you, rotate outward as you press up. Named after Arnold Schwarzenegger. Hits all three delt heads.</div><a href="https://www.youtube.com/watch?v=6Z15_WdXmVw" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Lateral Raise" data-section="shoulders"><div class="exercise-name">Cable Lateral Raise</div><div class="exercise-desc">Cable from low pulley. Constant tension throughout movement unlike dumbbells. Great for medial delt isolation.</div><a href="https://www.youtube.com/watch?v=PPLLFOHmCuM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Upright Row" data-section="shoulders"><div class="exercise-name">Upright Row</div><div class="exercise-desc">Pull bar up along body to chin level. Works upper traps and medial delts. Keep grip not too narrow to protect shoulders.</div><a href="https://www.youtube.com/watch?v=Um3qnRWMRFE" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Machine Shoulder Press" data-section="shoulders"><div class="exercise-name">Machine Shoulder Press</div><div class="exercise-desc">Guided press machine. Great for beginners or heavy sets with less stabilization required. Full range of motion.</div><a href="https://www.youtube.com/watch?v=Wqq43dKW1TU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Push Press" data-section="shoulders"><div class="exercise-name">Push Press</div><div class="exercise-desc">Use leg drive to initiate press. Allows heavier loads than strict press. Great for power and strength development.</div><a href="https://www.youtube.com/watch?v=iaBVSJm78ko" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Behind The Neck Press" data-section="shoulders"><div class="exercise-name">Behind The Neck Press</div><div class="exercise-desc">Press bar behind head. Advanced movement requiring good shoulder mobility. Use light weight, not for everyone.</div><a href="https://www.youtube.com/watch?v=eSzNNYk7nVU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Plate Front Raise" data-section="shoulders"><div class="exercise-name">Plate Front Raise</div><div class="exercise-desc">Hold weight plate with both hands, raise to eye level. Good variation for front delt development.</div><a href="https://www.youtube.com/watch?v=HmAHCouRoN8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Shrug" data-section="shoulders"><div class="exercise-name">Dumbbell Shrug</div><div class="exercise-desc">Hold dumbbells at sides, shrug shoulders up toward ears. Builds upper trap thickness. Hold contraction briefly.</div><a href="https://www.youtube.com/watch?v=g6qbq4Lf1FI" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Seated Dumbbell Lateral Raise" data-section="shoulders"><div class="exercise-name">Seated Lateral Raise</div><div class="exercise-desc">Seated version removes momentum cheating. Forces strict form. Great for medial delt isolation.</div><a href="https://www.youtube.com/watch?v=3VcKaXpzqRo" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Front Raise" data-section="shoulders"><div class="exercise-name">Cable Front Raise</div><div class="exercise-desc">Low pulley cable raise to shoulder height. Constant tension targets front delts more effectively than dumbbells.</div><a href="https://www.youtube.com/watch?v=X7l-RDsNxMk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Leaning Lateral Raise" data-section="shoulders"><div class="exercise-name">Leaning Lateral Raise</div><div class="exercise-desc">Hold a rack for support, lean away. Creates better angle for medial delt activation. Full stretch at bottom.</div><a href="https://www.youtube.com/watch?v=k5jGUMONujg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Face Pull" data-section="shoulders"><div class="exercise-name">Face Pull</div><div class="exercise-desc">Cable at head height, pull to face with external rotation. Essential for rear delt and rotator cuff health.</div><a href="https://www.youtube.com/watch?v=rep-qVOkqgk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Handstand Push-Up" data-section="shoulders"><div class="exercise-name">Handstand Push-Up</div><div class="exercise-desc">Advanced bodyweight shoulder press against wall. Tremendous strength builder. Requires solid base strength first.</div><a href="https://www.youtube.com/watch?v=9L2b2khySLE" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Barbell Front Raise" data-section="shoulders"><div class="exercise-name">Barbell Front Raise</div><div class="exercise-desc">Both hands on bar, raise to shoulder height. Heavier load possible vs dumbbells. Controls anterior delt work.</div><a href="https://www.youtube.com/watch?v=MNgLOxnKVLg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="External Rotation" data-section="shoulders"><div class="exercise-name">External Rotation</div><div class="exercise-desc">Elbow at 90 degrees, rotate arm outward. Rotator cuff strengthening. Essential for shoulder injury prevention.</div><a href="https://www.youtube.com/watch?v=aGfnmqt9SLs" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+    <!-- ARMS -->
+    <div id="arms" class="body-section">
+      <div class="section-header">
+        <div class="section-title">ARMS</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Barbell Curl" data-section="arms"><div class="exercise-name">Barbell Curl</div><div class="exercise-desc">Classic bicep builder. Stand upright, curl bar to shoulders. Keep elbows fixed at sides, no swinging.</div><a href="https://www.youtube.com/watch?v=kwG2ipFRgfo" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dumbbell Curl" data-section="arms"><div class="exercise-name">Dumbbell Curl</div><div class="exercise-desc">Alternate or simultaneous. Supinate wrist as you curl for full bicep contraction. Control the negative.</div><a href="https://www.youtube.com/watch?v=sAq_ocpRh_I" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Hammer Curl" data-section="arms"><div class="exercise-name">Hammer Curl</div><div class="exercise-desc">Neutral grip, thumbs up. Targets brachialis and brachioradialis. Builds arm thickness and forearm size.</div><a href="https://www.youtube.com/watch?v=TwD-YGVP4Bk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Preacher Curl" data-section="arms"><div class="exercise-name">Preacher Curl</div><div class="exercise-desc">Arm rests on pad eliminating cheating. Targets lower bicep insertion. Full stretch at bottom is key.</div><a href="https://www.youtube.com/watch?v=fIWP-FRFNU0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Concentration Curl" data-section="arms"><div class="exercise-name">Concentration Curl</div><div class="exercise-desc">Seated, elbow braced on inner thigh. Pure isolation movement. Peak contraction and squeeze at top.</div><a href="https://www.youtube.com/watch?v=0AUGkch3tzc" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Curl" data-section="arms"><div class="exercise-name">Cable Curl</div><div class="exercise-desc">Low pulley cable. Constant tension even at top unlike barbell. Great for finishing bicep pump.</div><a href="https://www.youtube.com/watch?v=NFzTWp2qpiE" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Incline Dumbbell Curl" data-section="arms"><div class="exercise-name">Incline Dumbbell Curl</div><div class="exercise-desc">Lying back on incline bench, arms hang. Creates full bicep stretch at bottom. Excellent long head activation.</div><a href="https://www.youtube.com/watch?v=soxrZlIl35U" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Tricep Pushdown" data-section="arms"><div class="exercise-name">Tricep Pushdown</div><div class="exercise-desc">Cable from high pulley. Push down keeping elbows at sides. Squeeze at bottom. Use rope or bar attachment.</div><a href="https://www.youtube.com/watch?v=2-LAMcpzODU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Skull Crusher" data-section="arms"><div class="exercise-name">Skull Crusher</div><div class="exercise-desc">Lying barbell or dumbbell tricep extension. Lower to forehead, extend up. Excellent long head builder.</div><a href="https://www.youtube.com/watch?v=d_KZxkY_0cM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Overhead Tricep Extension" data-section="arms"><div class="exercise-name">Overhead Tricep Extension</div><div class="exercise-desc">Dumbbell behind head, elbows up. Maximum long head stretch. Keep elbows pointed forward, not flared.</div><a href="https://www.youtube.com/watch?v=YbX7Wd8jQ-Q" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Tricep Dip" data-section="arms"><div class="exercise-name">Tricep Dip</div><div class="exercise-desc">Hands on bench, body upright. Lower body bending elbows, press back up. Upright torso targets triceps.</div><a href="https://www.youtube.com/watch?v=0326dy_-CzM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Diamond Push-Up" data-section="arms"><div class="exercise-name">Diamond Push-Up</div><div class="exercise-desc">Hands form diamond shape under chest. Intense tricep focus. Keep elbows close, lower chest to hands.</div><a href="https://www.youtube.com/watch?v=J0DnG1_S92I" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Rope Pushdown" data-section="arms"><div class="exercise-name">Rope Pushdown</div><div class="exercise-desc">Rope attachment allows wrist rotation at bottom. Flare rope at bottom for full contraction of all tricep heads.</div><a href="https://www.youtube.com/watch?v=vB5OHsJ3EME" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Reverse Curl" data-section="arms"><div class="exercise-name">Reverse Curl</div><div class="exercise-desc">Overhand grip curl. Targets brachialis and brachioradialis. Great for complete arm and forearm development.</div><a href="https://www.youtube.com/watch?v=nRgxYX2Ve9w" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Wrist Curl" data-section="arms"><div class="exercise-name">Wrist Curl</div><div class="exercise-desc">Forearms on bench, curl wrists up. Directly targets forearm flexors. Essential for grip strength.</div><a href="https://www.youtube.com/watch?v=A1aBUU3M6o8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="21s" data-section="arms"><div class="exercise-name">21s</div><div class="exercise-desc">7 lower half reps, 7 upper half reps, 7 full reps. Intense bicep pump technique. Use lighter weight than normal.</div><a href="https://www.youtube.com/watch?v=dfHAEMrxgkM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cross Body Hammer Curl" data-section="arms"><div class="exercise-name">Cross Body Hammer Curl</div><div class="exercise-desc">Curl dumbbell across body to opposite shoulder. Unique angle for brachialis development. Alternate arms.</div><a href="https://www.youtube.com/watch?v=MBOFnuCKKq0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Kickback" data-section="arms"><div class="exercise-name">Kickback</div><div class="exercise-desc">Hinge forward, upper arm parallel to floor, extend forearm back. Strict form required for tricep isolation.</div><a href="https://www.youtube.com/watch?v=6SS6K3lAwZ8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Spider Curl" data-section="arms"><div class="exercise-name">Spider Curl</div><div class="exercise-desc">Chest on incline bench face down, arms hanging. Curl up. Eliminates all body momentum for strict bicep work.</div><a href="https://www.youtube.com/watch?v=k0GCvFRFnGY" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Overhead Cable Curl" data-section="arms"><div class="exercise-name">Overhead Cable Curl</div><div class="exercise-desc">Cables at head height on both sides, curl inward. Hits bicep peak with constant tension. Great pump finisher.</div><a href="https://www.youtube.com/watch?v=UQaGESJbXY0" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+    <!-- LEGS -->
+    <div id="legs" class="body-section">
+      <div class="section-header">
+        <div class="section-title">LEGS</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Barbell Squat" data-section="legs"><div class="exercise-name">Barbell Squat</div><div class="exercise-desc">Bar on upper back, squat to parallel or below. Keep chest up, knees tracking toes. King of leg exercises.</div><a href="https://www.youtube.com/watch?v=ultWZbUMPL8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Front Squat" data-section="legs"><div class="exercise-name">Front Squat</div><div class="exercise-desc">Bar across front delts. More upright torso, greater quad activation. Requires wrist mobility or cross arm grip.</div><a href="https://www.youtube.com/watch?v=m4ytaCJZpl0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Leg Press" data-section="legs"><div class="exercise-name">Leg Press</div><div class="exercise-desc">Machine press. Foot position changes muscle emphasis. High feet targets glutes, low feet targets quads.</div><a href="https://www.youtube.com/watch?v=IZxyjW7MPJQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Romanian Deadlift" data-section="legs"><div class="exercise-name">Romanian Deadlift</div><div class="exercise-desc">Hinge at hips, bar close to legs. Feel hamstring stretch, drive hips forward to stand. Primary hamstring builder.</div><a href="https://www.youtube.com/watch?v=JCXUYuzwNrM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Leg Curl" data-section="legs"><div class="exercise-name">Leg Curl</div><div class="exercise-desc">Lying or seated. Curl weight toward glutes. Full extension at bottom for maximum hamstring stretch.</div><a href="https://www.youtube.com/watch?v=ELOCsoDSmrg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Leg Extension" data-section="legs"><div class="exercise-name">Leg Extension</div><div class="exercise-desc">Machine isolation for quads. Extend to full lockout, squeeze at top. Control descent, don't let weight slam.</div><a href="https://www.youtube.com/watch?v=YyvSfVjQeL0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Walking Lunge" data-section="legs"><div class="exercise-name">Walking Lunge</div><div class="exercise-desc">Step forward, lower knee to floor, drive up and forward. Works quads, glutes, and balance simultaneously.</div><a href="https://www.youtube.com/watch?v=L8fvypPrzzs" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Bulgarian Split Squat" data-section="legs"><div class="exercise-name">Bulgarian Split Squat</div><div class="exercise-desc">Rear foot elevated, front foot forward. Single leg squat variation. Brutal quad and glute developer.</div><a href="https://www.youtube.com/watch?v=2C-uNgKwPLE" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Hip Thrust" data-section="legs"><div class="exercise-name">Hip Thrust</div><div class="exercise-desc">Bar across hips, shoulders on bench. Drive hips up squeezing glutes hard at top. Best glute builder.</div><a href="https://www.youtube.com/watch?v=SEdqd1n0cvg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Calf Raise" data-section="legs"><div class="exercise-name">Calf Raise</div><div class="exercise-desc">Stand on edge, lower heels fully, raise to tiptoes. Full range of motion essential. High reps work well.</div><a href="https://www.youtube.com/watch?v=-M4-G8p1fCI" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Seated Calf Raise" data-section="legs"><div class="exercise-name">Seated Calf Raise</div><div class="exercise-desc">Targets soleus more than standing version. Knees bent at 90 degrees. Full stretch and contraction each rep.</div><a href="https://www.youtube.com/watch?v=JbyjNymZOt0" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Hack Squat" data-section="legs"><div class="exercise-name">Hack Squat</div><div class="exercise-desc">Machine squat with back support. Allows heavy quad loading with less lower back stress than barbell squat.</div><a href="https://www.youtube.com/watch?v=0tn5K9NlCfo" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Sumo Deadlift" data-section="legs"><div class="exercise-name">Sumo Deadlift</div><div class="exercise-desc">Wide stance, toes pointed out. Greater inner thigh and glute activation. Shorter range of motion than conventional.</div><a href="https://www.youtube.com/watch?v=WYu1xTfOlLg" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Step Up" data-section="legs"><div class="exercise-name">Step Up</div><div class="exercise-desc">Step onto box or bench, drive through heel. Unilateral movement for balance and quad strength. Add weight progressively.</div><a href="https://www.youtube.com/watch?v=dQqApCGd5Ss" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Glute Bridge" data-section="legs"><div class="exercise-name">Glute Bridge</div><div class="exercise-desc">Lying on floor, feet flat, drive hips up squeezing glutes. Beginner version of hip thrust. Add weight on hips.</div><a href="https://www.youtube.com/watch?v=wPM8icPu6H8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Nordic Curl" data-section="legs"><div class="exercise-name">Nordic Curl</div><div class="exercise-desc">Knees anchored, lower body forward. Extremely intense hamstring eccentric. Builds injury resilient hamstrings.</div><a href="https://www.youtube.com/watch?v=d8AAPcAFqVk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Goblet Squat" data-section="legs"><div class="exercise-name">Goblet Squat</div><div class="exercise-desc">Hold dumbbell or kettlebell at chest. Great squat teaching tool. Naturally creates upright torso position.</div><a href="https://www.youtube.com/watch?v=MeIiIdhvXT4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Box Squat" data-section="legs"><div class="exercise-name">Box Squat</div><div class="exercise-desc">Squat to box, pause, drive up. Teaches proper depth and eliminates stretch reflex. Great for powerlifting.</div><a href="https://www.youtube.com/watch?v=8Xp9oisRRoA" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Sissy Squat" data-section="legs"><div class="exercise-name">Sissy Squat</div><div class="exercise-desc">Hold support, lean back, knees forward over toes. Advanced quad isolation. Not for those with knee issues.</div><a href="https://www.youtube.com/watch?v=AQ8lCvLNvCQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Reverse Lunge" data-section="legs"><div class="exercise-name">Reverse Lunge</div><div class="exercise-desc">Step backward into lunge. Easier on knees than forward lunge. Focus on front leg driving you back up.</div><a href="https://www.youtube.com/watch?v=xrPteyQLGAo" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+    <!-- CORE -->
+    <div id="core" class="body-section">
+      <div class="section-header">
+        <div class="section-title">CORE</div>
+        <div class="section-line"></div>
+      </div>
+      <div class="exercise-list">
+        <div class="exercise-card" data-name="Plank" data-section="core"><div class="exercise-name">Plank</div><div class="exercise-desc">Forearms on floor, body straight. Hold position bracing all core muscles. Build time progressively.</div><a href="https://www.youtube.com/watch?v=pSHjTRCQxIw" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Crunch" data-section="core"><div class="exercise-name">Crunch</div><div class="exercise-desc">Curl shoulders off floor, keep lower back down. Focus on shortening the abs, not pulling the neck.</div><a href="https://www.youtube.com/watch?v=Xyd_fa5zoEU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Leg Raise" data-section="core"><div class="exercise-name">Leg Raise</div><div class="exercise-desc">Lying flat, raise straight legs to 90 degrees. Lower slowly without touching floor. Targets lower abs.</div><a href="https://www.youtube.com/watch?v=JB2oyawG9KI" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Hanging Leg Raise" data-section="core"><div class="exercise-name">Hanging Leg Raise</div><div class="exercise-desc">Hang from bar, raise legs to 90 or higher. Harder than floor version. Add weight with ankle weights.</div><a href="https://www.youtube.com/watch?v=Pr1ieGZ5atk" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Russian Twist" data-section="core"><div class="exercise-name">Russian Twist</div><div class="exercise-desc">Seated, lean back slightly, rotate torso side to side. Add weight plate or medicine ball for intensity.</div><a href="https://www.youtube.com/watch?v=wkD8rjkodUI" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Cable Crunch" data-section="core"><div class="exercise-name">Cable Crunch</div><div class="exercise-desc">Kneel at cable, pull down crunching abs. Allows progressive overload unlike bodyweight crunches.</div><a href="https://www.youtube.com/watch?v=2fbujeH3F0E" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Ab Wheel Rollout" data-section="core"><div class="exercise-name">Ab Wheel Rollout</div><div class="exercise-desc">Roll forward extending body, pull back using abs. Advanced movement. Start from knees before progressing to standing.</div><a href="https://www.youtube.com/watch?v=sTUlNQHcLSQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Side Plank" data-section="core"><div class="exercise-name">Side Plank</div><div class="exercise-desc">Sideways on one forearm. Targets obliques and lateral core stability. Hold then switch sides. Progress with hip dips.</div><a href="https://www.youtube.com/watch?v=K2KACMxQEiU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Mountain Climber" data-section="core"><div class="exercise-name">Mountain Climber</div><div class="exercise-desc">Push-up position, drive knees to chest alternately. Cardio and core combined. Keep hips level throughout.</div><a href="https://www.youtube.com/watch?v=nmwgirgXLYM" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dragon Flag" data-section="core"><div class="exercise-name">Dragon Flag</div><div class="exercise-desc">Hold bench, raise entire body keeping it straight, lower slowly. Extreme core exercise made famous by Bruce Lee.</div><a href="https://www.youtube.com/watch?v=njCSuQTgqP8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Hollow Body Hold" data-section="core"><div class="exercise-name">Hollow Body Hold</div><div class="exercise-desc">Lower back pressed to floor, arms and legs extended low. Gymnastic core exercise. Build time progressively.</div><a href="https://www.youtube.com/watch?v=LlDNef_Ztsc" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Bicycle Crunch" data-section="core"><div class="exercise-name">Bicycle Crunch</div><div class="exercise-desc">Alternate elbow to opposite knee while extending other leg. Targets obliques and upper abs simultaneously.</div><a href="https://www.youtube.com/watch?v=9FGilxCbdz8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="V-Up" data-section="core"><div class="exercise-name">V-Up</div><div class="exercise-desc">Simultaneously raise legs and torso to form V shape. Full abs engagement. Control both phases of movement.</div><a href="https://www.youtube.com/watch?v=7UVgs18Y1P4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Pallof Press" data-section="core"><div class="exercise-name">Pallof Press</div><div class="exercise-desc">Cable at chest height, press forward and hold. Anti-rotation exercise. Excellent for core stability training.</div><a href="https://www.youtube.com/watch?v=AH_QZLm_0-s" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Dead Bug" data-section="core"><div class="exercise-name">Dead Bug</div><div class="exercise-desc">Lying on back, extend opposite arm and leg. Excellent for spine stability and core motor control.</div><a href="https://www.youtube.com/watch?v=4XLEnwUr1d8" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Toes to Bar" data-section="core"><div class="exercise-name">Toes to Bar</div><div class="exercise-desc">Hang from bar, raise toes to touch bar. Advanced hanging core exercise. Full core and hip flexor challenge.</div><a href="https://www.youtube.com/watch?v=_03pCKOv4l4" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Woodchop" data-section="core"><div class="exercise-name">Woodchop</div><div class="exercise-desc">Cable from high to low in diagonal pattern. Rotational power exercise. Great for athletic core development.</div><a href="https://www.youtube.com/watch?v=pAplQXkYFgQ" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Flutter Kick" data-section="core"><div class="exercise-name">Flutter Kick</div><div class="exercise-desc">Lying down, alternate raising and lowering legs in small range. Military staple for lower ab endurance.</div><a href="https://www.youtube.com/watch?v=ANVdMDaYRts" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Windshield Wiper" data-section="core"><div class="exercise-name">Windshield Wiper</div><div class="exercise-desc">Lying, legs at 90 degrees, rotate side to side. Advanced oblique exercise. Keep shoulders flat on floor.</div><a href="https://www.youtube.com/watch?v=X7QVAFGUFsU" target="_blank" class="watch-link">▶ WATCH</a></div>
+        <div class="exercise-card" data-name="Suitcase Carry" data-section="core"><div class="exercise-name">Suitcase Carry</div><div class="exercise-desc">Hold heavy dumbbell one side only, walk upright. Anti-lateral flexion. Builds functional core strength.</div><a href="https://www.youtube.com/watch?v=NMNlBkygfwk" target="_blank" class="watch-link">▶ WATCH</a></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function searchExercises() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.exercise-card');
+      const sections = document.querySelectorAll('.body-section');
+      const noResults = document.getElementById('noResults');
+      let totalVisible = 0;
+
+      sections.forEach(section => {
+        let sectionVisible = 0;
+        const sectionCards = section.querySelectorAll('.exercise-card');
+        sectionCards.forEach(card => {
+          const name = card.getAttribute('data-name').toLowerCase();
+          const desc = card.querySelector('.exercise-desc').textContent.toLowerCase();
+          if (query === '' || name.includes(query) || desc.includes(query)) {
+            card.classList.remove('hidden');
+            sectionVisible++;
+            totalVisible++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+        section.style.display = sectionVisible === 0 && query !== '' ? 'none' : 'block';
+      });
+
+      noResults.style.display = totalVisible === 0 && query !== '' ? 'block' : 'none';
+    }
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('.body-section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 150;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

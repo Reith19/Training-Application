@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RS Fitness | Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body{font-family:Inter,sans-serif}.logo-glow{filter:drop-shadow(0 0 20px rgba(139,0,0,.5))}.bg-hero{background-image:linear-gradient(to right,rgba(0,0,0,.9) 35%,rgba(0,0,0,.45)),url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&q=80');background-size:cover;background-position:center}.btn-red{background:linear-gradient(135deg,#8B0000,#cc0000);transition:.25s}.btn-red:hover{background:linear-gradient(135deg,#cc0000,#ff1a1a);transform:translateY(-1px);box-shadow:0 8px 25px rgba(139,0,0,.5)}.input-field{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:.25s}.input-field:focus{background:rgba(255,255,255,.08);border-color:#8B0000;box-shadow:0 0 0 3px rgba(139,0,0,.2);outline:none}.toast{position:fixed;right:24px;bottom:24px;background:#1a1a1a;border:1px solid #cc0000;color:#ff6b6b;padding:12px 18px;border-radius:10px;font-size:.85rem;opacity:0;transform:translateY(10px);transition:.3s}.toast.show{opacity:1;transform:translateY(0)}
+  </style>
+</head>
+<body class="bg-hero min-h-screen flex items-center justify-center">
+  <div class="w-full max-w-md mx-4">
+    <div class="flex flex-col items-center mb-8">
+      <img src="logo.jpg" alt="RS Fitness" class="w-24 h-24 object-contain logo-glow mb-4 rounded-full" />
+      <h1 class="text-white text-4xl tracking-widest" style="font-family:'Bebas Neue',sans-serif;">RS FITNESS</h1>
+      <p class="text-gray-400 text-sm tracking-wider mt-1">ROLE-BASED PORTAL</p>
+    </div>
+    <div class="rounded-2xl p-8" style="background:rgba(20,20,20,.88);backdrop-filter:blur(12px);border:1px solid rgba(139,0,0,.3);">
+      <h2 class="text-white text-xl font-semibold mb-1">Welcome back</h2>
+      <p class="text-gray-400 text-sm mb-6">Sign in with the account created in Settings.</p>
+      <div class="space-y-4">
+        <div><label class="text-gray-400 text-xs tracking-wider uppercase mb-2 block">Email</label><input type="email" id="email" placeholder="you@email.com" class="input-field w-full px-4 py-3 rounded-lg text-white text-sm" /></div>
+        <div><label class="text-gray-400 text-xs tracking-wider uppercase mb-2 block">Password</label><input type="password" id="password" placeholder="••••••••" class="input-field w-full px-4 py-3 rounded-lg text-white text-sm" onkeydown="if(event.key==='Enter')login()" /></div>
+        <button id="loginBtn" class="btn-red w-full py-3 rounded-lg text-white font-semibold text-sm tracking-wider mt-2" onclick="login()">SIGN IN</button>
+      </div>
+      <div class="mt-6 text-xs text-gray-500 leading-relaxed">
+        First time setup: run <b>auth-schema.sql</b>, create the first super admin, then manage accounts from Settings.
+      </div>
+    </div>
+    <p class="text-center text-gray-600 text-xs mt-6">© 2026 RS Fitness. All rights reserved.</p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="app-auth.js"></script>
+  <script>
+    function show(message){const t=document.getElementById('toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+    async function login(){
+      const email=document.getElementById('email').value.trim();
+      const password=document.getElementById('password').value;
+      if(!email||!password){show('Enter email and password.');return}
+      const btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='SIGNING IN...';
+      try{await rsAuth.signIn(email,password);window.location.href='home.html'}
+      catch(e){show(e.message||'Login failed.')}
+      finally{btn.disabled=false;btn.textContent='SIGN IN'}
+    }
+    (async()=>{try{const p=await rsAuth.getCurrentProfile();if(p)window.location.href='home.html'}catch{rsAuth.clear()}})();
+  </script>
+</body>
+</html>
